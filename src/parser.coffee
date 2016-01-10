@@ -1,0 +1,232 @@
+{retailer_list, field_list} = require('./line_data')
+
+retailer_aliases =
+    'Farnell'     : 'Farnell'
+    'FEC'         : 'Farnell'
+    'Premier'     : 'Farnell'
+    'Digikey'     : 'Digikey'
+    'Digi-key'    : 'Digikey'
+    'Mouser'      : 'Mouser'
+    'RS'          : 'RS'
+    'RSOnline'    : 'RS'
+    'RS-Online'   : 'RS'
+    'RS-Delivers' : 'RS'
+    'RSDelivers'  : 'RS'
+    'Radio Spares': 'RS'
+    'RadioSpares' : 'RS'
+    'Newark'      : 'Newark'
+
+headings =
+    'reference'                : 'reference'
+    'references'               : 'reference'
+    'line-note'                : 'reference'
+    'line note'                : 'reference'
+    'comment'                  : 'description'
+    'comments'                 : 'description'
+    'description'              : 'description'
+    'cmnts'                    : 'description'
+    'descr.'                   : 'description'
+    'qty'                      : 'quantity'
+    'quantity'                 : 'quantity'
+    'part-number'              : 'partNumber'
+    'partnumber'               : 'partNumber'
+    'part number'              : 'partNumber'
+    'm/f part'                 : 'partNumber'
+    'manuf. part'              : 'partNumber'
+    'mpn'                      : 'partNumber'
+    'm/f part number'          : 'partNumber'
+    'manuf. part number'       : 'partNumber'
+    'manufacturer part'        : 'partNumber'
+    'manufacturer part number' : 'partNumber'
+    'manufacturer'             : 'manufacturer'
+    'm/f'                      : 'manufacturer'
+
+#a case insensitive match
+lookup = (name, obj) ->
+    for key of obj
+        re = new RegExp(key, 'i')
+        if name.match(re)
+            return obj[key]
+    #else
+    return null
+
+checkValidLines =  (lines_incoming, invalid, warnings) ->
+    lines = []
+    for line in lines_incoming
+        if invalid.length > 10
+            lines = []
+            break
+        number = parseInt(line.quantity)
+        if isNaN(number)
+            invalid.push {row:line.row, reason:'Quantity is not a number.'}
+        else if number < 1
+            invalid.push {row:line.row, reason:'Quantity is less than one.'}
+        else
+            line.quantity = number
+            for key,v of line.retailers
+                if not v?
+                    v = ''
+                else if key != 'Digikey'
+                    v = v.replace(/-/g,'')
+            for field in field_list
+                if not line[field]?
+                    line[field] = ''
+            lines.push(line)
+    return {lines, invalid, warnings}
+
+parseSimple = (rows) ->
+    lines = []
+    invalid = []
+    for row, i in rows
+        if row != ''
+            cells = row.split('\t')
+            retailer = lookup(cells[2], retailer_aliases)
+            if not retailer
+                if cells[2] == ''
+                    invalid.push
+                        row:i + 1
+                        reason: "Retailer is not defined."
+                else
+                    invalid.push
+                        row:i + 1
+                        reason: "Retailer '#{cells[2]}' is not known."
+            else
+                retailersObj = {}
+                for r in retailer_list
+                    retailersObj[r] = ''
+                retailersObj["#{retailer}"] = cells[3]
+                line =
+                    reference : cells[0]
+                    quantity  : cells[1]
+                    retailers : retailersObj
+                    row       : i + 1
+                if !line.quantity
+                    invalid.push
+                        row:line.row
+                        reason: 'Quantity is undefined.'
+                else if !line.retailers["#{retailer}"]
+                    invalid.push
+                        row:line.row
+                        reason: 'Part number is undefined.'
+                else
+                    lines.push(line)
+    return {lines, invalid}
+
+
+parseNamed = (rows, order, retailers) ->
+    lines = []
+    invalid = []
+    for row, i in rows
+        if row != ''
+            cells = row.split('\t')
+            rs = () ->
+                retailersObj = {}
+                for r in retailer_list
+                    retailersObj[r] = ''
+                for r in retailers
+                    if cells[order.indexOf(r)]?
+                        retailersObj["#{r}"] = cells[order.indexOf(r)].trim()
+                return retailersObj
+            line =
+                reference    : cells[order.indexOf('reference')]?.trim()
+                quantity     : cells[order.indexOf('quantity')]?.trim()
+                partNumber   : cells[order.indexOf('partNumber')]?.trim()
+                manufacturer : cells[order.indexOf('manufacturer')]?.trim()
+                description  : cells[order.indexOf('description')]?.trim()
+                retailers    : rs()
+                row          : i + 1
+            if not line.reference? or line.reference == ''
+                invalid.push
+                    row:line.row
+                    reason: 'Reference is undefined.'
+            else if not line.quantity?
+                invalid.push
+                    row:line.row
+                    reason: 'Quantity is undefined.'
+            else
+                lines.push(line)
+    return {lines, invalid}
+
+
+hasNamedColumns = (cells) ->
+    for cell in cells
+        if lookup(cell, headings)?
+            return true
+    #else
+    return false
+
+
+getOrder = (cells) ->
+    order = []
+    retailers = []
+    warnings = []
+
+    possible_names = {}
+    for k,v of headings
+        possible_names[k] = v
+    for k,v of retailer_aliases
+        possible_names[k] = v
+
+    for cell in cells
+        if cell == ''
+            #this is an empty column, it happen if you ctrl select several
+            #columns in a spreadsheet for example
+            order.push('')
+        else
+            heading = lookup(cell, possible_names)
+            retailer = lookup(cell, retailer_aliases)
+            if retailer?
+                retailers.push(retailer)
+            if heading?
+                order.push(heading)
+            else
+                warnings.push
+                    title:"Unknown column-heading '#{cell}'"
+                    message:"Column #{order.length + 1} was ignored."
+                order.push('')
+
+    return {order, retailers, warnings}
+
+
+parseTSV = (text) ->
+    rows = text.split('\n')
+    firstCells = rows[0].split('\t')
+    warnings = []
+    l = firstCells.length
+    if l < 2
+        return {
+            lines:[]
+            invalid:[
+                row:1
+                reason:"The pasted data doesn't look like tab seperated values."
+            ]
+        }
+    else if l < 3
+        return {
+            lines:[]
+            invalid:[
+                row:1
+                reason:"Only #{l} column#{if l > 1 then 's' else ''}.
+                    At least 3 are required."
+            ]
+        }
+    if hasNamedColumns(firstCells)
+        {order, retailers, reason, warnings} = getOrder(firstCells)
+        if not (order? && retailers?)
+            return {
+                lines:[]
+                invalid:[{row:1, reason:reason}]
+            }
+        if order.indexOf('reference') < 0
+            return {
+                lines:[]
+                invalid:[{row:1, reason:'You need a references column.'}]
+            }
+        {lines, invalid} = parseNamed(rows[1..], order, retailers)
+    else
+        {lines, invalid} = parseSimple(rows)
+    {lines, invalid, warnings} = checkValidLines(lines, invalid, warnings)
+    return {lines, invalid, warnings}
+
+
+exports.parseTSV = parseTSV

@@ -1,0 +1,30 @@
+{
+  "name": "1-click-bom",
+  "description": "Parse and write 1-click-BOM data.",
+  "homepage": "http://1clickBOM.com",
+  "author": "Kaspar Emanuel",
+  "license": "MIT",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "mkdir -p lib && for file in src/*.coffee; do coffee -m -c -o lib/ $file; done",
+    "lib": "git add lib"
+  },
+  "precommit": [
+    "build",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monostable/nodejs-1-click-bom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/monostable/nodejs-1-click-bom/issues"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.3",
+    "pre-commit": "^1.1.2"
+  },
+  "main": "lib/main.js",
+  "dependencies": {
+  }
+}
