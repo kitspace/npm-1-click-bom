@@ -198,7 +198,7 @@ parseTSV = (text) ->
             lines:[]
             invalid:[
                 row:1
-                reason:"The pasted data doesn't look like tab seperated values."
+                reason:"The data doesn't look like tab seperated values."
             ]
         }
     else if l < 3
