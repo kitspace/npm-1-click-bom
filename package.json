@@ -7,7 +7,8 @@
   "version": "0.1.0",
   "scripts": {
     "build": "mkdir -p lib && for file in src/*.coffee; do coffee -m -c -o lib/ $file; done",
-    "lib": "git add lib"
+    "lib": "git add lib",
+    "test": "mocha -R spec --recursive --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul test/test.coffee && istanbul report text-summary lcov"
   },
   "precommit": [
     "build",
@@ -21,10 +22,13 @@
     "url": "https://github.com/monostable/nodejs-1-click-bom/issues"
   },
   "devDependencies": {
+    "chai": "^3.4.1",
+    "coffee-coverage": "^1.0.1",
     "coffee-script": "^1.9.3",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.3.4",
     "pre-commit": "^1.1.2"
   },
   "main": "lib/main.js",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
