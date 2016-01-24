@@ -65,9 +65,9 @@ checkValidLines =  (lines_incoming, invalid, warnings) ->
             line.quantity = number
             for key,v of line.retailers
                 if not v?
-                    v = ''
+                    line.retailers[key] = ''
                 else if key != 'Digikey'
-                    v = v.replace(/-/g,'')
+                    line.retailers[key] = v.replace(/-/g,'')
             for field in field_list
                 if not line[field]?
                     line[field] = ''
@@ -198,7 +198,7 @@ parseTSV = (text) ->
             lines:[]
             invalid:[
                 row:1
-                reason:"The data doesn't look like tab seperated values."
+                reason:"The data doesn't look like tab separated values."
             ]
         }
     else if l < 3
