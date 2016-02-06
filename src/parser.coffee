@@ -225,6 +225,10 @@ parseTSV = (text) ->
         {lines, invalid} = parseNamed(rows[1..], order, retailers)
     else
         {lines, invalid} = parseSimple(rows)
+        warnings.push
+            title:"You have input data in the legacy format!"
+            message:"This format will be phased out by version 1.0. Please
+                inform us if you rely on it."
     {lines, invalid, warnings} = checkValidLines(lines, invalid, warnings)
     return {lines, invalid, warnings}
 
