@@ -4,7 +4,7 @@
   "homepage": "http://1clickBOM.com",
   "author": "Kaspar Emanuel",
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "scripts": {
     "build": "mkdir -p lib && for file in src/*.coffee; do coffee -m -c -o lib/ $file; done",
     "lib": "git add lib",

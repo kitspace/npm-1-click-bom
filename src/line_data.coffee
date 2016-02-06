@@ -25,3 +25,14 @@ exports.hasSKUs = (lines) ->
         if hasSKUs
             break
     return hasSKUs
+
+exports.numberOfEmpty = (lines) ->
+    n = 0
+    for line in lines
+        for f in exports.field_list
+            if line[f] == ''
+                n += 1
+        for r in exports.retailer_list
+            if line.retailers[r] == ''
+                n += 1
+    return n
