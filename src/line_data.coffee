@@ -1,5 +1,5 @@
 exports.retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
-exports.field_list = ['partNumber', 'manufacturer', 'description']
+exports.field_list = ['partNumber', 'description']
 exports.isComplete = (lines) ->
     complete = true
     for line in lines
