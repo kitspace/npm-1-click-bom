@@ -1,5 +1,5 @@
 exports.retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
-exports.field_list = ['partNumber', 'description']
+exports.field_list = ['partNumbers', 'description']
 exports.isComplete = (lines) ->
     complete = true
     for line in lines
@@ -29,9 +29,8 @@ exports.hasSKUs = (lines) ->
 exports.numberOfEmpty = (lines) ->
     n = 0
     for line in lines
-        for f in exports.field_list
-            if line[f] == ''
-                n += 1
+        if line.partNumbers.length < 1
+            n += 1
         for r in exports.retailer_list
             if line.retailers[r] == ''
                 n += 1
