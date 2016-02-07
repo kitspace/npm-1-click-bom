@@ -17,6 +17,8 @@ retailer_aliases =
     'Newark'      : 'Newark'
 
 headings =
+    'ref'                      : 'reference'
+    'refs'                     : 'reference'
     'reference'                : 'reference'
     'references'               : 'reference'
     'line-note'                : 'reference'
@@ -38,6 +40,9 @@ headings =
     'manuf. part number'       : 'partNumber'
     'manufacturer part'        : 'partNumber'
     'manufacturer part number' : 'partNumber'
+    'prt'                      : 'partNumber'
+    'part'                     : 'partNumber'
+    'parts'                    : 'partNumber'
 
 #a case insensitive match
 lookup = (name, obj) ->
