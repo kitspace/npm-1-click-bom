@@ -1,42 +1,36 @@
 {retailer_list, field_list} = require('./line_data')
 
 retailer_aliases =
-    'Farnell'       : 'Farnell'
-    'FEC'           : 'Farnell'
-    'Premier'       : 'Farnell'
-    'element14'     : 'Farnell'
-    'Digikey'       : 'Digikey'
-    'Digi-key'      : 'Digikey'
-    'Mouser'        : 'Mouser'
-    'RS'            : 'RS'
-    'RSOnline'      : 'RS'
-    'RS-Online'     : 'RS'
-    'RS-Delivers'   : 'RS'
-    'RSDelivers'    : 'RS'
-    'Radio Spares'  : 'RS'
-    'RadioSpares'   : 'RS'
-    'RS Components' : 'RS'
-    'Newark'        : 'Newark'
+    'Farnell'            : 'Farnell'
+    'FEC'                : 'Farnell'
+    'Premier'            : 'Farnell'
+    'element14'          : 'Farnell'
+    'Digi(-| )?key'      : 'Digikey'
+    'Mouser'             : 'Mouser'
+    'RS'                 : 'RS'
+    'RS(-| )?Online'     : 'RS'
+    'RS(-| )?Delivers'   : 'RS'
+    'Radio(-| )?Spares'  : 'RS'
+    'RS(-| )?Components' : 'RS'
+    'Newark'             : 'Newark'
 
 headings =
     'refs?'                      : 'reference'
     'references?'                : 'reference'
-    'line-notes?'                : 'reference'
-    'line notes?'                : 'reference'
+    'line(-| )?notes?'           : 'reference'
     'comments?'                  : 'description'
     'descriptions?'              : 'description'
     'cmnts?'                     : 'description'
     'descrs?'                    : 'description'
     'qtys?'                      : 'quantity'
     'quantity'                   : 'quantity'
-    'part-numbers?'              : 'partNumber'
-    'partnumbers?'               : 'partNumber'
-    'part numbers?'              : 'partNumber'
+    'quantities'                 : 'quantity'
+    'part(-| )?numbers?'         : 'partNumber'
     'm/?f parts?'                : 'partNumber'
-    'manuf\.? parts?'            : 'partNumber'
+    'manuf\\.? parts?'           : 'partNumber'
     'mpns?'                      : 'partNumber'
     'm/?f part numbers?'         : 'partNumber'
-    'manuf\.? part numbers?'     : 'partNumber'
+    'manuf\\.? part numbers?'    : 'partNumber'
     'manufacturer parts?'        : 'partNumber'
     'manufacturer part numbers?' : 'partNumber'
     'prts?'                      : 'partNumber'
@@ -45,7 +39,7 @@ headings =
 #a case insensitive match
 lookup = (name, obj) ->
     for key of obj
-        re = new RegExp(key, 'i')
+        re = RegExp(key, 'i')
         if name.match(re)
             return obj[key]
     #else
