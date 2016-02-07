@@ -114,6 +114,7 @@ parseNamed = (rows, order, retailers) ->
     for row, i in rows
         if row != ''
             cells = row.split('\t')
+
             rs = () ->
                 retailersObj = {}
                 for r in retailer_list
@@ -122,13 +123,25 @@ parseNamed = (rows, order, retailers) ->
                     if cells[order.indexOf(r)]?
                         retailersObj["#{r}"] = cells[order.indexOf(r)].trim()
                 return retailersObj
+
+            parts = () ->
+                part_list = []
+                part_indexes = []
+                for field,i in order
+                    if field == 'partNumber'
+                        part_indexes.push(i)
+                for index in part_indexes
+                    part_list.push(cells[index])
+                return part_list
+
             line =
                 reference    : cells[order.indexOf('reference')]?.trim()
                 quantity     : cells[order.indexOf('quantity')]?.trim()
-                partNumber   : cells[order.indexOf('partNumber')]?.trim()
                 description  : cells[order.indexOf('description')]?.trim()
+                partNumbers  : parts()
                 retailers    : rs()
                 row          : i + 1
+
             if not line.reference? or line.reference == ''
                 invalid.push
                     row:line.row
@@ -139,6 +152,7 @@ parseNamed = (rows, order, retailers) ->
                     reason: 'Quantity is undefined.'
             else
                 lines.push(line)
+
     return {lines, invalid}
 
 

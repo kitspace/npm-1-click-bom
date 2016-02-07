@@ -14,3 +14,7 @@ describe 'parseTSV', () ->
     it 'doesn\'t replace dashes for Digikey', () ->
         {lines, invalid} = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
         expect(lines[0].retailers.Digikey).to.equal('8-98-989')
+
+    it 'handles multiple part numbers', () ->
+        {lines, invalid} = parseTSV('References\tQty\tPart\tPart\ntest\t1\tmpn1\tmpn2')
+        expect(lines[0].partNumbers).to.deep.equal(['mpn1', 'mpn2'])
