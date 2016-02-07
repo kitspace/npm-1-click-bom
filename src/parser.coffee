@@ -35,6 +35,9 @@ headings =
     'manufacturer part numbers?' : 'partNumber'
     'prts?'                      : 'partNumber'
     'parts?'                     : 'partNumber'
+    'manufacturers?'             : 'manufacturer'
+    'm/?f'                       : 'manufacturer'
+    'manuf\\.?'                  : 'manufacturer'
 
 #a case insensitive match
 lookup = (name, obj) ->
@@ -134,6 +137,10 @@ parseNamed = (rows, order, retailers) ->
                     part = cells[index]
                     if part != ''
                         part_list.push(part)
+                if part_list.length == 1
+                    manufacturer = cells[order.indexOf('manufacturer')]?.trim()
+                    if manufacturer?
+                        part_list[0] = "#{manufacturer} #{part_list[0]}"
                 return part_list
 
             line =

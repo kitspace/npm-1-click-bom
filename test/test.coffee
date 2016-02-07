@@ -16,6 +16,15 @@ describe 'parseTSV', () ->
         {lines, invalid} = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
         expect(lines[0].retailers.Digikey).to.equal('8-98-989')
 
+    it 'trims whitespace', () ->
+        {lines, invalid} = parseTSV('References\tQty\tDigikey\tFarnell\n test \t1\t 898989 \t`')
+        expect(lines[0].retailers.Digikey).to.equal('898989')
+        expect(lines[0].reference).to.equal('test')
+
+    it 'adds manufacturer to part number', () ->
+        {lines, invalid} = parseTSV('References\tQty\tManufacturer\tPart\ntest\t1\tman\tmpn1\t`')
+        expect(lines[0].partNumbers[0]).to.equal('man mpn1')
+
     it 'handles multiple part numbers', () ->
         {lines, invalid} = parseTSV('References\tQty\tPart\tPart\ntest\t1\tmpn1\tmpn2')
         expect(lines[0].partNumbers).to.deep.equal(['mpn1', 'mpn2'])
