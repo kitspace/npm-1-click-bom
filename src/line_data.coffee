@@ -52,6 +52,8 @@ exports.merge =  (lines1, lines2) ->
             if index != index_ and line2.reference == line2_.reference
                 d = duplicates[line2.reference]
                 if d?
+                    #we already have a duplicate registered, push any
+                    #non-registered line-numbers
                     if index not in d
                         d.push(index)
                     if index_ not in d
@@ -65,7 +67,7 @@ exports.merge =  (lines1, lines2) ->
                 for r in retailer_list
                     if line2.retailers[r] != ''
                         line1.retailers[r] = line2.retailers[r]
-                line1.partNumbers.concat(line2.partNumbers)
+                line1.partNumbers = line1.partNumbers.concat(line2.partNumbers)
                 line1.quantity += line2.quantity
                 break
         if not exists
