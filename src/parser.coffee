@@ -38,8 +38,6 @@ headings =
     'manuf. part number'       : 'partNumber'
     'manufacturer part'        : 'partNumber'
     'manufacturer part number' : 'partNumber'
-    'manufacturer'             : 'manufacturer'
-    'm/f'                      : 'manufacturer'
 
 #a case insensitive match
 lookup = (name, obj) ->
@@ -131,7 +129,6 @@ parseNamed = (rows, order, retailers) ->
                 reference    : cells[order.indexOf('reference')]?.trim()
                 quantity     : cells[order.indexOf('quantity')]?.trim()
                 partNumber   : cells[order.indexOf('partNumber')]?.trim()
-                manufacturer : cells[order.indexOf('manufacturer')]?.trim()
                 description  : cells[order.indexOf('description')]?.trim()
                 retailers    : rs()
                 row          : i + 1
