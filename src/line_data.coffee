@@ -48,6 +48,8 @@ exports.merge =  (lines1, lines2) ->
     duplicates = {}
     merged = lines1
     for line2, index in lines2
+        #determine the line-numbers of any duplicates within a single line array
+        # as these will be merged too and we should warn about this
         for line2_, index_ in lines2
             if index != index_ and line2.reference == line2_.reference
                 d = duplicates[line2.reference]
@@ -64,11 +66,19 @@ exports.merge =  (lines1, lines2) ->
         for line1 in merged
             if line1.reference == line2.reference
                 exists = true
+                has_new_parts = false
                 for r in retailer_list
                     if line2.retailers[r] != ''
+                        if line1.retailers[r] != line2.retailers[r]
+                            has_new_parts = true
                         line1.retailers[r] = line2.retailers[r]
-                line1.partNumbers = line1.partNumbers.concat(line2.partNumbers)
-                line1.quantity += line2.quantity
+                for part in line2.partNumbers
+                    if part not in line1.partNumbers
+                        has_new_parts = true
+                        line1.partNumbers.push(part)
+                #if the exact same parts are found, we increase the quantity
+                if not has_new_parts
+                    line1.quantity += line2.quantity
                 break
         if not exists
             merged.push(line2)
