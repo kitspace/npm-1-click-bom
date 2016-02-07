@@ -131,7 +131,9 @@ parseNamed = (rows, order, retailers) ->
                     if field == 'partNumber'
                         part_indexes.push(i)
                 for index in part_indexes
-                    part_list.push(cells[index])
+                    part = cells[index]
+                    if part != ''
+                        part_list.push(part)
                 return part_list
 
             line =
