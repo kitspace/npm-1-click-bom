@@ -1,6 +1,6 @@
 {expect} = require('chai')
-{parseTSV} = require('./../lib/main')
-line_data = require('./../lib/line_data')
+{parseTSV, writeTSV} = require('./../lib/main')
+line_data = require('./../lib/main').lineData
 
 describe 'parseTSV', () ->
     it 'catches negative quantities', () ->
@@ -23,6 +23,18 @@ describe 'parseTSV', () ->
     it "doesn't add empty part numbers", () ->
         {lines, invalid} = parseTSV('References\tQty\tPart\tPart\ntest\t1\t\t')
         expect(lines[0].partNumbers.length).to.equal(0)
+
+describe 'writeTSV', () ->
+    it 'writes out multiple part numbers', () ->
+        test_string = 'References\tQuantity\tPart Number\tPart Number\tDescription'
+        for retailer in line_data.retailer_list
+            test_string += '\t' + retailer
+        test_string += '\ntest\t1\tmpn1\tmpn2\tdescr'
+        for _ in line_data.retailer_list
+            test_string += '\t'
+        test_string += '\n'
+        {lines, invalid} = parseTSV(test_string)
+        expect(writeTSV(lines)).to.equal(test_string)
 
 describe 'line_data.numberOfEmpty', () ->
     it 'counts retailers as empty fields', () ->
