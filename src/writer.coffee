@@ -2,7 +2,7 @@
 
 exports.writeTSV = (lines) ->
 
-    r = 'References\tQuantity'
+    r = 'References\tQty\tDescription'
 
     partsLengths = []
     for line in lines
@@ -10,26 +10,24 @@ exports.writeTSV = (lines) ->
 
     maxParts = Math.max.apply(null, partsLengths)
 
-    if maxParts < 1
-        maxParts = 1
-
-    for _ in [1..maxParts]
-        r += '\tPart Number'
-
-    r += '\tDescription'
+    if maxParts >= 1
+        for _ in [1..maxParts]
+            r += '\tPart Number'
 
     for retailer in retailer_list
         r += "\t#{retailer}"
+
     r += '\n'
 
     for line in lines
         r += "#{line.reference}"
         r += "\t#{line.quantity}"
-        for i in [1..maxParts]
-            r += '\t'
-            if line.partNumbers[i - 1]?
-                r += line.partNumbers[i - 1]
         r += "\t#{line.description}"
+        if maxParts >= 1
+            for i in [1..maxParts]
+                r += '\t'
+                if line.partNumbers[i - 1]?
+                    r += line.partNumbers[i - 1]
         for retailer in retailer_list
             if line.retailers[retailer]?
                 r += "\t#{line.retailers[retailer]}"

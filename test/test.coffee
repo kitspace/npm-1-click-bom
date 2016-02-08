@@ -35,10 +35,10 @@ describe 'parseTSV', () ->
 
 describe 'writeTSV', () ->
     it 'writes out multiple part numbers', () ->
-        test_string = 'References\tQuantity\tPart Number\tPart Number\tDescription'
+        test_string = 'References\tQty\tDescription\tPart Number\tPart Number'
         for retailer in line_data.retailer_list
             test_string += '\t' + retailer
-        test_string += '\ntest\t1\tmpn1\tmpn2\tdescr'
+        test_string += '\ntest\t1\tdescr\tmpn1\tmpn2'
         for _ in line_data.retailer_list
             test_string += '\t'
         test_string += '\n'
