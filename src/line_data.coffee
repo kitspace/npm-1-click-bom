@@ -11,12 +11,10 @@ exports.isComplete = (lines) ->
             if line.retailers[r] == ''
                 complete = false
                 break
+        if line.partNumbers.length < 1
+            complete = false
         if not complete
             break
-        for f in exports.field_list
-            if line[f] == ''
-                complete = false
-                break
     return complete
 
 
