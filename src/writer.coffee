@@ -1,5 +1,12 @@
 {retailer_list} = require './line_data'
 
+headings =
+    [ {reference: 'References'}
+    , {quantity: 'Qty'}
+    , {description: 'Description'}
+    , {partNumbers: 'Part Number'}
+    ]
+
 exports.writeTSV = (lines) ->
 
     r = 'References\tQty\tDescription'
