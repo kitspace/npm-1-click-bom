@@ -48,6 +48,15 @@ lookup = (name, obj) ->
     #else
     return null
 
+stripQuotes = (str) ->
+    ret = str
+    if ret[0] == '"' or ret[0] == "'"
+        ret = ret.substr(1)
+    last = ret.length - 1
+    if ret[last] == '"' or ret[last] == "'"
+        ret = ret.substr(0, last)
+    return ret
+
 checkValidLines =  (lines_incoming, invalid, warnings) ->
     lines = []
     for line in lines_incoming
@@ -251,3 +260,4 @@ parseTSV = (text) ->
 
 
 exports.parseTSV = parseTSV
+exports.stripQuotes = stripQuotes

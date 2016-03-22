@@ -1,5 +1,6 @@
 {expect} = require('chai')
 {parseTSV, writeTSV} = require('./../lib/main')
+{stripQuotes} = require('./../lib/parser')
 line_data = require('./../lib/main').lineData
 
 describe 'parseTSV', () ->
@@ -32,6 +33,12 @@ describe 'parseTSV', () ->
     it "doesn't add empty part numbers", () ->
         {lines, invalid} = parseTSV('References\tQty\tPart\tPart\ntest\t1\t\t')
         expect(lines[0].partNumbers.length).to.equal(0)
+
+describe 'stripQuotes', () ->
+    it 'strips double-quote', () ->
+        expect(stripQuotes('"a"')).to.equal('a')
+    it 'strips single-quote', () ->
+        expect(stripQuotes("'a'")).to.equal('a')
 
 describe 'writeTSV', () ->
     it 'writes out multiple part numbers', () ->
