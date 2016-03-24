@@ -18,6 +18,8 @@ headings =
     'refs?'                      : 'reference'
     'references?'                : 'reference'
     'line(-| )?notes?'           : 'reference'
+    #not happy about this one but it's an eagle default in bom.ulp
+    'parts'                      : 'reference'
     'comments?'                  : 'description'
     'descriptions?'              : 'description'
     'cmnts?'                     : 'description'
@@ -35,7 +37,7 @@ headings =
     'manufacturer parts?'        : 'partNumber'
     'manufacturer part numbers?' : 'partNumber'
     'prts?'                      : 'partNumber'
-    'parts?'                     : 'partNumber'
+    'manuf#'                     : 'partNumber'
     'manufacturers?'             : 'manufacturer'
     'm/?f'                       : 'manufacturer'
     'manuf\\.?'                  : 'manufacturer'
