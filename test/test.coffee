@@ -18,8 +18,9 @@ describe 'parseTSV', () ->
         expect(lines[0].retailers.Digikey).to.equal('8-98-989')
 
     it 'trims whitespace', () ->
-        {lines, invalid} = parseTSV('References\tQty\tDigikey\tFarnell\n test \t1\t 898989 \t`')
+        {lines, invalid} = parseTSV('References\tQty\tPart Number\tDigikey\tFarnell\n test \t1\t part number \t 898989 \t`')
         expect(lines[0].retailers.Digikey).to.equal('898989')
+        expect(lines[0].partNumbers[0]).to.equal('part number')
         expect(lines[0].reference).to.equal('test')
 
     it 'adds manufacturer to part number', () ->
