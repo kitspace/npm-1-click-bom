@@ -23,6 +23,7 @@ headings =
     'cmnts?'                     : 'description'
     'descrs?'                    : 'description'
     'qtys?'                      : 'quantity'
+    'qnty'                       : 'quantity'
     'quantity'                   : 'quantity'
     'quantities'                 : 'quantity'
     'part(-| )?numbers?'         : 'partNumber'
