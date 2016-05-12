@@ -1,7 +1,7 @@
 {expect} = require('chai')
-{parseTSV, writeTSV} = require('./../lib/main')
-{stripQuotes} = require('./../lib/parser')
-line_data = require('./../lib/main').lineData
+{parseTSV, writeTSV} = require('./../src/main')
+{stripQuotes} = require('./../src/parser')
+line_data = require('./../src/main').lineData
 
 describe 'parseTSV', () ->
     it 'catches negative quantities', () ->
