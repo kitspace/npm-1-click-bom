@@ -84,45 +84,6 @@ checkValidLines =  (lines_incoming, invalid, warnings) ->
             lines.push(line)
     return {lines, invalid, warnings}
 
-parseSimple = (rows) ->
-    lines = []
-    invalid = []
-    for row, i in rows
-        if row != ''
-            cells = row.split('\t')
-            retailer = lookup(cells[2], retailer_aliases)
-            if not retailer
-                if cells[2] == ''
-                    invalid.push
-                        row:i + 1
-                        reason: "Retailer is not defined."
-                else
-                    invalid.push
-                        row:i + 1
-                        reason: "Retailer '#{cells[2]}' is not known."
-            else
-                retailersObj = {}
-                for r in retailer_list
-                    retailersObj[r] = ''
-                retailersObj["#{retailer}"] = cells[3]
-                line =
-                    reference : cells[0]
-                    quantity  : cells[1]
-                    retailers : retailersObj
-                    row       : i + 1
-                if !line.quantity
-                    invalid.push
-                        row:line.row
-                        reason: 'Quantity is undefined.'
-                else if !line.retailers["#{retailer}"]
-                    invalid.push
-                        row:line.row
-                        reason: 'Part number is undefined.'
-                else
-                    lines.push(line)
-    return {lines, invalid}
-
-
 parseNamed = (rows, order, retailers) ->
     lines = []
     invalid = []
@@ -253,11 +214,9 @@ parseTSV = (text) ->
             }
         {lines, invalid} = parseNamed(rows[1..], order, retailers)
     else
-        {lines, invalid} = parseSimple(rows)
         warnings.push
             title:"You have input data in the legacy format!"
-            message:"This format will be phased out by version 1.0 but please
-                inform us if you do rely on it."
+            message:"This format has been disabled please tell us if you do rely on it."
     {lines, invalid, warnings} = checkValidLines(lines, invalid, warnings)
     return {lines, invalid, warnings}
 
