@@ -47,10 +47,10 @@ describe 'stripQuotes', () ->
 
 describe 'writeTSV', () ->
     it 'writes out multiple part numbers', () ->
-        test_string = 'References\tQty\tDescription\tPart Number\tPart Number'
+        test_string = 'References\tQty\tDescription\tManufacturer\tMPN\tManufacturer\tMPN'
         for retailer in line_data.retailer_list
             test_string += '\t' + retailer
-        test_string += '\ntest\t1\tdescr\tmpn1\tmpn2'
+        test_string += '\ntest\t1\tdescr\tmanuf1\tmpn1\tmanuf2\tmpn2'
         for _ in line_data.retailer_list
             test_string += '\t'
         test_string += '\n'

@@ -19,7 +19,8 @@ exports.writeTSV = (lines) ->
 
     if maxParts >= 1
         for _ in [1..maxParts]
-            r += '\tPart Number'
+            r += '\tManufacturer'
+            r += '\tMPN'
 
     for retailer in retailer_list
         r += "\t#{retailer}"
@@ -34,7 +35,9 @@ exports.writeTSV = (lines) ->
             for i in [1..maxParts]
                 r += '\t'
                 if line.partNumbers[i - 1]?
-                    r += line.partNumbers[i - 1]
+                    r += line.partNumbers[i - 1].manufacturer
+                    r += '\t'
+                    r += line.partNumbers[i - 1].part
         for retailer in retailer_list
             if line.retailers[retailer]?
                 r += "\t#{line.retailers[retailer]}"
