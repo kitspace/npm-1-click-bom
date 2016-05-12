@@ -103,17 +103,22 @@ parseNamed = (rows, order, retailers) ->
             parts = () ->
                 part_list = []
                 part_indexes = []
+                manuf_indexes = []
                 for field,i in order
                     if field == 'partNumber'
                         part_indexes.push(i)
-                for index in part_indexes
-                    part = cells[index].trim()
-                    if part != ''
-                        part_list.push(part)
-                if part_list.length == 1
-                    manufacturer = cells[order.indexOf('manufacturer')]?.trim()
-                    if manufacturer?
-                        part_list[0] = "#{manufacturer} #{part_list[0]}"
+                for field,i in order
+                    if field == 'manufacturer'
+                        manuf_indexes.push(i)
+                for part_index,i in part_indexes
+                    try manuf_index = manuf_indexes[i]
+                    if manuf_index?
+                        manuf = cells[manuf_index].trim()
+                    else
+                        manuf = ''
+                    part = cells[part_index].trim()
+                    if part? and part != ''
+                        part_list.push({part:part, manufacturer:manuf})
                 return part_list
 
             line =

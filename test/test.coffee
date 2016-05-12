@@ -20,24 +20,24 @@ describe 'parseTSV', () ->
     it 'trims whitespace', () ->
         {lines, invalid} = parseTSV('References\tQty\tPart Number\tDigikey\tFarnell\n test \t1\t part number \t 898989 \t`')
         expect(lines[0].retailers.Digikey).to.equal('898989')
-        expect(lines[0].manufacturerParts[0].part).to.equal('part number')
+        expect(lines[0].partNumbers[0].part).to.equal('part number')
         expect(lines[0].reference).to.equal('test')
 
     it 'adds manufacturer to part number', () ->
         {lines, invalid} = parseTSV('References\tQty\tManufacturer\tPart Number\ntest\t1\tman\tmpn1\t`')
-        expect(lines[0].manufacturerParts[0].manufacturer).to.equal('man')
-        expect(lines[0].manufacturerParts[0].part).to.equal('mpn1')
+        expect(lines[0].partNumbers[0].manufacturer).to.equal('man')
+        expect(lines[0].partNumbers[0].part).to.equal('mpn1')
 
     it 'handles multiple part numbers', () ->
         {lines, invalid} = parseTSV('References\tQty\tPart Number\tPart Number\ntest\t1\tmpn1\tmpn2')
-        expect(lines[0].manufacturerParts[0].manufacturer).to.deep.equal('')
-        expect(lines[0].manufacturerParts[1].manufacturer).to.deep.equal('')
-        expect(lines[0].manufacturerParts[0].part).to.deep.equal('mpn1')
-        expect(lines[0].manufacturerParts[1].part).to.deep.equal('mpn2')
+        expect(lines[0].partNumbers[0].manufacturer).to.deep.equal('')
+        expect(lines[0].partNumbers[1].manufacturer).to.deep.equal('')
+        expect(lines[0].partNumbers[0].part).to.deep.equal('mpn1')
+        expect(lines[0].partNumbers[1].part).to.deep.equal('mpn2')
 
     it "doesn't add empty part numbers", () ->
         {lines, invalid} = parseTSV('References\tQty\tPart Number\tPart Number\ntest\t1\t\t')
-        expect(lines[0].manufacturerParts.length).to.equal(0)
+        expect(lines[0].partNumbers.length).to.equal(0)
 
 describe 'stripQuotes', () ->
     it 'strips double-quote', () ->
