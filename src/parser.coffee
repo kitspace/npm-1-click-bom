@@ -60,7 +60,7 @@ stripQuotes = (str) ->
         ret = ret.substr(0, last)
     return ret
 
-checkValidLines =  (lines_incoming, invalid, warnings) ->
+checkValidLines = (lines_incoming, invalid, warnings) ->
     lines = []
     for line in lines_incoming
         if invalid.length > 10
