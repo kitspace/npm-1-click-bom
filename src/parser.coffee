@@ -60,6 +60,11 @@ stripQuotes = (str) ->
         ret = ret.substr(0, last)
     return ret
 
+sanitize = (str) ->
+    if not str
+        return ''
+    return stripQuotes(str).trim()
+
 checkValidLines = (lines_incoming, invalid, warnings) ->
     lines = []
     for line in lines_incoming
@@ -97,7 +102,7 @@ parseNamed = (rows, order, retailers) ->
                     retailersObj[r] = ''
                 for r in retailers
                     if cells[order.indexOf(r)]?
-                        retailersObj["#{r}"] = cells[order.indexOf(r)].trim()
+                        retailersObj["#{r}"] = sanitize(cells[order.indexOf(r)])
                 return retailersObj
 
             parts = () ->
@@ -113,18 +118,18 @@ parseNamed = (rows, order, retailers) ->
                 for part_index,i in part_indexes
                     try manuf_index = manuf_indexes[i]
                     if manuf_index?
-                        manuf = cells[manuf_index].trim()
+                        manuf = sanitize(cells[manuf_index])
                     else
                         manuf = ''
-                    part = cells[part_index].trim()
+                    part = sanitize(cells[part_index])
                     if part? and part != ''
                         part_list.push({part:part, manufacturer:manuf})
                 return part_list
 
             line =
-                reference    : cells[order.indexOf('reference')]?.trim()
-                quantity     : cells[order.indexOf('quantity')]?.trim()
-                description  : cells[order.indexOf('description')]?.trim()
+                reference    : sanitize(cells[order.indexOf('reference')])
+                quantity     : sanitize(cells[order.indexOf('quantity')])
+                description  : sanitize(cells[order.indexOf('description')])
                 partNumbers  : parts()
                 retailers    : rs()
                 row          : i + 1
