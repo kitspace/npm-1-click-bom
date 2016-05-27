@@ -1,4 +1,4 @@
-# The 1-click-BOM NodeJS Library
+# The 1-click-BOM NPM Library
 
 A library for dealing with bill of material data for use with the 
 [1clickBOM extension](https://github.com/monostable/1clickBOM).
