@@ -92,7 +92,8 @@ checkValidLines = (lines_incoming, invalid, warnings) ->
 parseNamed = (rows, order, retailers) ->
     lines = []
     invalid = []
-    for row, i in rows
+    for row, index in rows
+        console.log index
         if row != ''
             cells = row.split('\t')
 
@@ -132,7 +133,7 @@ parseNamed = (rows, order, retailers) ->
                 description  : sanitize(cells[order.indexOf('description')])
                 partNumbers  : parts()
                 retailers    : rs()
-                row          : i + 1
+                row          : index + 1
 
             if not line.reference? or line.reference == ''
                 invalid.push

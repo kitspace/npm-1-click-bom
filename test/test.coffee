@@ -41,9 +41,14 @@ describe 'parseTSV', () ->
 
     it "strips quotes", () ->
         {lines, invalid} = parseTSV('References\tQty\tPart Number\tPart Number\n"test"\t"1"\t\'mpn\'\t')
-        expect(lines[0].reference).to.equal("test")
+        expect(lines[0].reference).to.equal('test')
         expect(lines[0].quantity).to.equal(1)
-        expect(lines[0].partNumbers[0].part).to.equal("mpn")
+        expect(lines[0].partNumbers[0].part).to.equal('mpn')
+
+    it "keep track of line numbers", () ->
+        {lines, invalid} = parseTSV('References\tQty\tPart Number\ntest1\t1\tmpn\ntest2\t1\tmpn\n')
+        expect(lines[0].row).to.equal(1)
+        expect(lines[1].row).to.equal(2)
 
 describe 'stripQuotes', () ->
     it 'strips double-quote', () ->
