@@ -93,7 +93,6 @@ parseNamed = (rows, order, retailers) ->
     lines = []
     invalid = []
     for row, index in rows
-        console.log index
         if row != ''
             cells = row.split('\t')
 
