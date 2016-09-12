@@ -70,10 +70,12 @@ exports.merge =  (lines1, lines2) ->
                         if line1.retailers[r] != line2.retailers[r]
                             has_new_parts = true
                         line1.retailers[r] = line2.retailers[r]
-                for part in line2.partNumbers
-                    if part not in line1.partNumbers
-                        has_new_parts = true
-                        line1.partNumbers.push(part)
+                for part2 in line2.partNumbers
+                    has_new_parts = not line1.partNumbers.reduce (prev, part1) ->
+                            prev or (part1.part == part2.part) and (part1.manufacturer == part2.manufacturer)
+                    , false
+                    if has_new_parts
+                        line1.partNumbers.push(part2)
                 #if the exact same parts are found, we increase the quantity
                 if not has_new_parts
                     line1.quantity += line2.quantity

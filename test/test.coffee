@@ -81,3 +81,11 @@ describe 'line_data.numberOfEmpty', () ->
         {lines, invalid} = parseTSV('References\tQty\tFarnell\tPart\tPart\ntest\t1\t898989\t\t\n')
         expect(line_data.numberOfEmpty(lines)).to.equal(line_data.retailer_list.length)
 
+describe 'line_data.merge', () ->
+	it 'increases quantity on identical merge', () ->
+		{lines} = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n')
+		lines1 = JSON.parse(JSON.stringify(lines))
+		{lines} = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n')
+		lines2 = JSON.parse(JSON.stringify(lines))
+		[merged] = line_data.merge(lines1, lines2)
+		expect(merged[0].quantity).to.equal(2)
