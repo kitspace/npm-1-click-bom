@@ -4,7 +4,7 @@
   "homepage": "http://1clickBOM.com",
   "author": "Kaspar Emanuel",
   "license": "MIT",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "test": "istanbul cover -x test/ --include-all-sources _mocha && npm run lint",
     "lint" : "eslint lib/"
