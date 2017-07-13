@@ -15,7 +15,7 @@ exports.hasSKUs = function(lines) {
         return retailer_list.reduce(function(prev, r) {
             return prev || (line.retailers[r] !== '')
         }, prev)
-    }, true)
+    }, false)
 }
 
 

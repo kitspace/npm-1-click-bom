@@ -100,6 +100,50 @@ describe('lineData.numberOfEmpty', function() {
     });
 });
 
+describe('lineData.hasSKUs', function() {
+    it('returns false on empty', function() {
+        expect(lineData.hasSKUs([])).to.equal(false)
+    })
+    it('returns false with no skus', function() {
+        const lines = [
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: '',
+                Farnell: '',
+            }},
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: '',
+                Farnell: '',
+            }},
+        ]
+        expect(lineData.hasSKUs(lines)).to.equal(false)
+    })
+    it('returns false true when there is an skus', function() {
+        const lines = [
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: 'x',
+                Farnell: '',
+            }},
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: '',
+                Farnell: '',
+            }},
+        ]
+        expect(lineData.hasSKUs(lines)).to.equal(true)
+    })
+})
+
 describe('lineData.merge', () =>
 	it('increases quantity on identical merge', function() {
 		var result = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n');
