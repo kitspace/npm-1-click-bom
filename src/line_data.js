@@ -31,7 +31,13 @@ exports.numberOfEmpty = function numberOfEmpty(lines) {
             return prev
         }, prev)
     }, 0)
-    return n
+}
+
+
+exports.maxMpns = function maxMpns(lines) {
+    return lines.reduce(function(prev, line) {
+        return Math.max(prev, line.partNumbers.length)
+    }, 0)
 }
 
 
