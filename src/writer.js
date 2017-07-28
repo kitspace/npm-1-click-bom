@@ -26,7 +26,7 @@ exports.writeTSV = function(lines) {
 
     r += '\n'
 
-    for (line of lines) {
+    for (var line of lines) {
         r += `${line.reference}`
         r += `\t${line.quantity}`
         r += `\t${line.description}`

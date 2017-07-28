@@ -159,9 +159,7 @@ var parseNamed = function(rows, order, retailers) {
                         manuf = ''
                     }
                     var part = sanitize(cells[part_index])
-                    if ((part != null) && part !== '') {
-                        part_list.push({part, manufacturer:manuf})
-                    }
+                    part_list.push({part, manufacturer:manuf})
                 }
                 return part_list
             }
