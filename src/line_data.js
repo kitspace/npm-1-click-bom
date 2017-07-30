@@ -40,6 +40,14 @@ exports.maxPartNumbers = function maxPartNumbers(lines) {
     }, 0)
 }
 
+exports.toRetailers = function toRetailers(lines) {
+    const retailers = {}
+    retailer_list.forEach(r => {
+      retailers[r] = lines.map(l => l.retailers[r])
+    })
+    return retailers
+}
+
 
 exports.merge = function(lines1, lines2) {
     var d

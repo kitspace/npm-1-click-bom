@@ -162,3 +162,40 @@ describe('lineData.maxPartNumbers', () => {
         expect(max).to.equal(2)
     })
 })
+
+describe('lineData.toRetailers', () => {
+    it('extracts retailers', () => {
+        const lines = [
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: '',
+                Farnell: '',
+            }},
+            {retailers: {
+                Digikey: '',
+                Mouser: '',
+                RS: '',
+                Newark: '',
+                Farnell: '',
+            }},
+        ]
+        const result = lineData.toRetailers(lines)
+        expect(result.Digikey.length).to.equal(2)
+        expect(result.Mouser.length).to.equal(2)
+        expect(result.RS.length).to.equal(2)
+        expect(result.Newark.length).to.equal(2)
+        expect(result.Farnell.length).to.equal(2)
+        expect(result.Digikey[0]).to.equal('')
+        expect(result.Digikey[1]).to.equal('')
+        expect(result.Mouser[0]).to.equal('')
+        expect(result.Mouser[1]).to.equal('')
+        expect(result.RS[0]).to.equal('')
+        expect(result.RS[1]).to.equal('')
+        expect(result.Newark[0]).to.equal('')
+        expect(result.Newark[1]).to.equal('')
+        expect(result.Farnell[0]).to.equal('')
+        expect(result.Farnell[1]).to.equal('')
+    })
+})
