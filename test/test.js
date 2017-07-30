@@ -43,11 +43,6 @@ describe('parseTSV', function() {
         return expect(result.lines[0].partNumbers[1].part).to.deep.equal('mpn2')
     })
 
-    it("doesn't add empty part numbers", function() {
-        var result = parseTSV('References\tQty\tPart Number\tPart Number\ntest\t1\t\t')
-        return expect(result.lines[0].partNumbers.length).to.equal(0)
-    })
-
     it("strips quotes", function() {
         var result = parseTSV('References\tQty\tPart Number\tPart Number\n"test"\t"1"\t\'mpn\'\t')
         expect(result.lines[0].reference).to.equal('test')
