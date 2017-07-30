@@ -34,7 +34,7 @@ exports.numberOfEmpty = function numberOfEmpty(lines) {
 }
 
 
-exports.maxMpns = function maxMpns(lines) {
+exports.maxPartNumbers = function maxPartNumbers(lines) {
     return lines.reduce(function(prev, line) {
         return Math.max(prev, line.partNumbers.length)
     }, 0)

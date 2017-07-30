@@ -155,10 +155,10 @@ describe('lineData.merge', () => {
     })
 })
 
-describe('lineData.maxMpns', () => {
+describe('lineData.maxPartNumbers', () => {
     it('returns maximum number of MPNs per line in lines', () => {
         var result = parseTSV('References\tQty\tPart Number\tPart Number\ntest\t1\tmpn1\tmpn2\ntest2\ntest2\t1\tmpn1\t\t\n')
-        var max = lineData.maxMpns(result.lines)
+        var max = lineData.maxPartNumbers(result.lines)
         expect(max).to.equal(2)
     })
 })

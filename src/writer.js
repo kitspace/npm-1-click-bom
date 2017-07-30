@@ -1,4 +1,4 @@
-var {retailer_list, maxMpns} = require('./line_data')
+var {retailer_list, maxPartNumbers} = require('./line_data')
 
 var headings =
     [ {reference: 'References'}
@@ -11,7 +11,7 @@ exports.writeTSV = function(lines) {
 
     var r = 'References\tQty\tDescription'
 
-    var maxParts = maxMpns(lines)
+    var maxParts = maxPartNumbers(lines)
 
     if (maxParts >= 1) {
         for (var _ of __range__(1, maxParts, true)) {
