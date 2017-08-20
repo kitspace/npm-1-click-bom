@@ -1,5 +1,5 @@
 'use strict'
-var retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
+var retailer_list = ['Digi-Key', 'Mouser', 'RS Components', 'Newark', 'Farnell']
 
 exports.retailer_list = retailer_list
 

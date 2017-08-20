@@ -19,12 +19,12 @@ describe('parseTSV', function() {
 
     it("doesn't replace dashes for Digikey", function() {
         var result = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
-        return expect(result.lines[0].retailers.Digikey).to.equal('8-98-989')
+        return expect(result.lines[0].retailers['Digi-Key']).to.equal('8-98-989')
     })
 
     it('trims whitespace', function() {
         var result = parseTSV('References\tQty\tPart Number\tDigikey\tFarnell\n test \t1\t part number \t 898989 \t`')
-        expect(result.lines[0].retailers.Digikey).to.equal('898989')
+        expect(result.lines[0].retailers['Digi-Key']).to.equal('898989')
         expect(result.lines[0].partNumbers[0].part).to.equal('part number')
         return expect(result.lines[0].reference).to.equal('test')
     })
@@ -102,16 +102,16 @@ describe('lineData.hasSKUs', function() {
     it('returns false with no skus', function() {
         const lines = [
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: '',
                 Farnell: '',
             }},
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: '',
                 Farnell: '',
             }},
@@ -121,16 +121,16 @@ describe('lineData.hasSKUs', function() {
     it('returns true when there is an sku', function() {
         const lines = [
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: 'x',
                 Farnell: '',
             }},
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: '',
                 Farnell: '',
             }},
@@ -162,32 +162,32 @@ describe('lineData.toRetailers', () => {
     it('extracts retailers', () => {
         const lines = [
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: '',
                 Farnell: '',
             }},
             {retailers: {
-                Digikey: '',
+                'Digi-Key': '',
                 Mouser: '',
-                RS: '',
+                'RS Components': '',
                 Newark: '',
                 Farnell: '',
             }},
         ]
         const result = lineData.toRetailers(lines)
-        expect(result.Digikey.length).to.equal(2)
+        expect(result['Digi-Key'].length).to.equal(2)
         expect(result.Mouser.length).to.equal(2)
-        expect(result.RS.length).to.equal(2)
+        expect(result['RS Components'].length).to.equal(2)
         expect(result.Newark.length).to.equal(2)
         expect(result.Farnell.length).to.equal(2)
-        expect(result.Digikey[0]).to.equal('')
-        expect(result.Digikey[1]).to.equal('')
+        expect(result['Digi-Key'][0]).to.equal('')
+        expect(result['Digi-Key'][1]).to.equal('')
         expect(result.Mouser[0]).to.equal('')
         expect(result.Mouser[1]).to.equal('')
-        expect(result.RS[0]).to.equal('')
-        expect(result.RS[1]).to.equal('')
+        expect(result['RS Components'][0]).to.equal('')
+        expect(result['RS Components'][1]).to.equal('')
         expect(result.Newark[0]).to.equal('')
         expect(result.Newark[1]).to.equal('')
         expect(result.Farnell[0]).to.equal('')

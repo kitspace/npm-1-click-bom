@@ -7,13 +7,13 @@ var retailer_aliases = {
     'FEC'                : 'Farnell',
     'Premier'            : 'Farnell',
     'element14'          : 'Farnell',
-    'Digi(-| )?key'      : 'Digikey',
+    'Digi(-| )?key'      : 'Digi-Key',
     'Mouser'             : 'Mouser',
-    'RS'                 : 'RS',
-    'RS(-| )?Online'     : 'RS',
-    'RS(-| )?Delivers'   : 'RS',
-    'Radio(-| )?Spares'  : 'RS',
-    'RS(-| )?Components' : 'RS',
+    'RS'                 : 'RS Components',
+    'RS(-| )?Online'     : 'RS Components',
+    'RS(-| )?Delivers'   : 'RS Components',
+    'Radio(-| )?Spares'  : 'RS Components',
+    'RS(-| )?Components' : 'RS Components',
     'Newark'             : 'Newark'
 }
 
@@ -97,7 +97,7 @@ var checkValidLines = function(lines_incoming, invalid, warnings) {
                 var v = line.retailers[key]
                 if (v == null) {
                     line.retailers[key] = ''
-                } else if (key !== 'Digikey') {
+                } else if (key !== 'Digi-Key') {
                     line.retailers[key] = v.replace(/-/g,'')
                 }
             }
