@@ -4,13 +4,13 @@ const path = require('path')
 const expect = require('chai').expect
 
 const content = fs.readFileSync(path.join(__dirname, 'example.tsv'), 'utf8')
-const {lines} = oneClickBOM.parseTSV(content, true)
+const {lines} = oneClickBOM.parse(content, true)
 const ref = oneClickBOM.writeTSV(lines)
 
 describe('files', () => {
     it('parses tsv', done => {
         fs.readFile(path.join(__dirname, 'example.tsv'), 'utf8', (err, content) => {
-            const {lines} = oneClickBOM.parseTSV(content)
+            const {lines} = oneClickBOM.parse(content)
             expect(lines.length).to.be.above(0)
             const x = oneClickBOM.writeTSV(lines)
             expect(x).to.equal(ref)
@@ -19,7 +19,7 @@ describe('files', () => {
     })
     it('parses csv', done => {
         fs.readFile(path.join(__dirname, 'example.csv'), 'utf8', (err, content) => {
-            const {lines} = oneClickBOM.parseTSV(content)
+            const {lines} = oneClickBOM.parse(content)
             expect(lines.length).to.be.above(0)
             const x = oneClickBOM.writeTSV(lines)
             expect(x).to.equal(ref)
@@ -28,7 +28,7 @@ describe('files', () => {
     })
     it('parses ods', done => {
         fs.readFile(path.join(__dirname, 'example.ods'), (err, content) => {
-            const {lines} = oneClickBOM.parseTSV(content)
+            const {lines} = oneClickBOM.parse(content)
             expect(lines.length).to.be.above(0)
             const x = oneClickBOM.writeTSV(lines)
             expect(x).to.equal(ref)
@@ -37,7 +37,7 @@ describe('files', () => {
     })
     it('parses xlsx', done => {
         fs.readFile(path.join(__dirname, 'example.xlsx'), (err, content) => {
-            const {lines} = oneClickBOM.parseTSV(content)
+            const {lines} = oneClickBOM.parse(content)
             expect(lines.length).to.be.above(0)
             const x = oneClickBOM.writeTSV(lines)
             expect(x).to.equal(ref)

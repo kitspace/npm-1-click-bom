@@ -247,8 +247,7 @@ var getOrder = function(cells) {
     return {order, retailers, warnings}
 }
 
-
-var parseTSV = function(text, tsv=false) {
+function parse(text) {
     var warnings = []
     try {
         var x = xlsx.read(text, {type: 'buffer'})
@@ -271,7 +270,33 @@ var parseTSV = function(text, tsv=false) {
             message: `Using ${sheetName} only`
         })
     }
-    text = xlsx.utils.sheet_to_csv(x.Sheets[sheetName], {FS: '\t'})
+    const tsv = xlsx.utils.sheet_to_csv(x.Sheets[sheetName], {FS: '\t'})
+    return parseTSV(tsv)
+}
+
+function parseTSV(text, warnings=[]) {
+    var warnings = []
+    try {
+        var x = xlsx.read(text, {type: 'buffer'})
+    } catch (e) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'Could not parse'}]
+        }
+    }
+    if (x.Sheets.length < 1) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'No data'}]
+        }
+    }
+    var sheetName = x.SheetNames[0]
+    if (x.Sheets.length > 1) {
+        warnings.push({
+            title: 'Multiple worksheets found in spreadsheet',
+            message: `Using ${sheetName} only`
+        })
+    }
     var invalid, lines
     var rows = text.split('\n')
     var firstCells = rows[0].split('\t')
@@ -319,4 +344,5 @@ At least 3 are required.`
 
 
 exports.parseTSV = parseTSV
+exports.parse = parse
 exports.stripQuotes = stripQuotes
