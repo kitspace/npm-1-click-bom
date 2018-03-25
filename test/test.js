@@ -118,7 +118,7 @@ describe('lineData.hasSKUs', function() {
         ]
         expect(lineData.hasSKUs(lines)).to.equal(false)
     })
-    it('returns false true when there is an skus', function() {
+    it('returns true when there is an sku', function() {
         const lines = [
             {retailers: {
                 Digikey: '',

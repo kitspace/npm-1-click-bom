@@ -1,4 +1,5 @@
 'use strict'
+var xlsx = require('xlsx')
 var lineData = require('./line_data')
 
 var retailer_aliases = {
@@ -246,12 +247,59 @@ var getOrder = function(cells) {
     return {order, retailers, warnings}
 }
 
+function parse(text) {
+    var warnings = []
+    try {
+        var x = xlsx.read(text, {type: 'buffer'})
+    } catch (e) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'Could not parse'}]
+        }
+    }
+    if (x.Sheets.length < 1) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'No data'}]
+        }
+    }
+    var sheetName = x.SheetNames[0]
+    if (x.Sheets.length > 1) {
+        warnings.push({
+            title: 'Multiple worksheets found in spreadsheet',
+            message: `Using ${sheetName} only`
+        })
+    }
+    const tsv = xlsx.utils.sheet_to_csv(x.Sheets[sheetName], {FS: '\t'})
+    return parseTSV(tsv)
+}
 
-var parseTSV = function(text) {
+function parseTSV(text, warnings=[]) {
+    var warnings = []
+    try {
+        var x = xlsx.read(text, {type: 'buffer'})
+    } catch (e) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'Could not parse'}]
+        }
+    }
+    if (x.Sheets.length < 1) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason: 'No data'}]
+        }
+    }
+    var sheetName = x.SheetNames[0]
+    if (x.Sheets.length > 1) {
+        warnings.push({
+            title: 'Multiple worksheets found in spreadsheet',
+            message: `Using ${sheetName} only`
+        })
+    }
     var invalid, lines
     var rows = text.split('\n')
     var firstCells = rows[0].split('\t')
-    var warnings = []
     var l = firstCells.length
     if (l < 2) {
         return {
@@ -273,34 +321,28 @@ At least 3 are required.`
             ]
         }
     }
-    if (hasNamedColumns(firstCells)) {
-        var order, reason, retailers
-        var result = getOrder(firstCells)
-        var order = result.order
-        var reason = result.reason
-        var retailers = result.retailers
-        if (!((order != null) && (retailers != null))) {
-            return {
-                lines   : [],
-                invalid : [{row:1, reason}]
-            }
+    var order, reason, retailers
+    var result = getOrder(firstCells)
+    var order = result.order
+    var reason = result.reason
+    var retailers = result.retailers
+    if (!((order != null) && (retailers != null))) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason}]
         }
-        if (order.indexOf('reference') < 0) {
-            return {
-                lines   : [],
-                invalid : [{row:1, reason:'You need a references column.'}]
-            }
-        }
-        result = parseNamed(rows.slice(1), order, retailers)
-    } else {
-        warnings.push({
-            title:"You have input data in the legacy format!",
-            message:"This format has been disabled please tell us if you do rely on it."
-        })
     }
+    if (order.indexOf('reference') < 0) {
+        return {
+            lines   : [],
+            invalid : [{row:1, reason:'You need a references column.'}]
+        }
+    }
+    result = parseNamed(rows.slice(1), order, retailers)
     return checkValidLines(result.lines, result.invalid, warnings)
 }
 
 
 exports.parseTSV = parseTSV
+exports.parse = parse
 exports.stripQuotes = stripQuotes
