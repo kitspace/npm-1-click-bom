@@ -25,5 +25,8 @@
     "istanbul": "^0.4.2",
     "mocha": "^2.3.4"
   },
-  "main": "lib/main.js"
+  "main": "lib/main.js",
+  "dependencies": {
+    "xlsx": "^0.12.6"
+  }
 }
