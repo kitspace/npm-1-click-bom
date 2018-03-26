@@ -31,6 +31,7 @@ var headings = {
     'quantity'                   : 'quantity',
     'quantities'                 : 'quantity',
     'quant.?'                    : 'quantity',
+    'co?u?nt'                    : 'quantity',
     'part(-| )?numbers?'         : 'partNumber',
     'm/?f parts?'                : 'partNumber',
     'manuf\\.? parts?'           : 'partNumber',
