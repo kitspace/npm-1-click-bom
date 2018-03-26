@@ -44,6 +44,7 @@ var headings = {
     'manuf#'                     : 'partNumber',
     'ma?n?fr part.*'             : 'partNumber',
     'mfpn'                       : 'partNumber',
+    'mfg.?part.*'                : 'partNumber',
     'manufacturers?'             : 'manufacturer',
     'm/?f'                       : 'manufacturer',
     'manuf\\.?'                  : 'manufacturer'
