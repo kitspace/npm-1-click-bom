@@ -83,6 +83,10 @@ describe('parseTSV', function() {
     expect(result.lines[0].retailers.Farnell).to.equal('part1')
     expect(result.lines[1].retailers.Mouser).to.equal('part2')
   })
+  it('always returns an invalid array', () =>  {
+    var result = parseTSV('References\tQty\tFarnell\ntest\t-1\t898989')
+    expect(result.invalid.length).to.equal(0)
+  })
 })
 
 describe('stripQuotes', function() {

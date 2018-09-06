@@ -136,7 +136,7 @@ function toLines(sheet, warnings) {
   }
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
   lines = lines.map(processLine.bind(null, warnings))
-  return {lines, warnings}
+  return {lines, warnings, invalid: []}
 }
 
 function processLine(warnings, line, i) {
