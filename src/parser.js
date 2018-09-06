@@ -23,6 +23,7 @@ const headings = {
   'line(-| )?notes?': 'reference',
   //not happy about this one but it's an eagle default in bom.ulp
   parts: 'reference',
+  'designators?': 'reference',
   'comments?': 'description',
   'descriptions?': 'description',
   'cmnts?': 'description',
