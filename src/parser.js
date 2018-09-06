@@ -80,7 +80,10 @@ function toLines(sheet, warnings) {
   const aoa = sheet_to_aoa(sheet)
   const h = findHeader(aoa)
   if (h < 0) {
-    return []
+    return {
+      lines: [],
+      invalid: [{row: 1, reason: 'Could not find header'}]
+    }
   }
   const hs = aoa[h].map(x => lookup(x, headings)).map((x, i) => {
     if (x === 'manufacturer') {
@@ -91,6 +94,30 @@ function toLines(sheet, warnings) {
     }
     return x
   })
+  if (hs.indexOf('quantity') < 0) {
+    return {
+      lines: [],
+      invalid: [{row: 1, reason: 'No quantity column'}]
+    }
+  }
+  if (hs.indexOf('reference') < 0) {
+    return {
+      lines: [],
+      invalid: [{row: 1, reason: 'No references column'}]
+    }
+  }
+  if (hs.filter(x => x).length < 3) {
+    return {
+      lines: [],
+      invalid: [
+        {
+          row: 1,
+          reason:
+            'You need at least references, quantity and a part number or retailer column'
+        }
+      ]
+    }
+  }
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
   lines = lines.map((line, i) => {
     const newLine = {
