@@ -1,6 +1,6 @@
 'use strict'
-var parser   = require('./parser')
-var writer   = require('./writer')
+var parser = require('./parser')
+var writer = require('./writer')
 var lineData = require('./line_data')
 
 exports.parse = parser.parse
