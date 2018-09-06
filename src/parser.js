@@ -119,51 +119,53 @@ function toLines(sheet, warnings) {
     }
   }
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
-  lines = lines.map((line, i) => {
-    const newLine = {
-      row: i + 1,
-      retailers: {
-        Digikey: '',
-        RS: '',
-        Mouser: '',
-        Farnell: '',
-        Newark: ''
-      }
-    }
-    const manufacturers = []
-    const parts = []
-    for (const key in line) {
-      const v = stripQuotes(line[key].trim())
-      if (lineData.retailer_list.indexOf(key) >= 0) {
-        if (key === 'Digikey') {
-          newLine.retailers[key] = v
-        } else {
-          newLine.retailers[key] = v.replace(/-/g, '')
-        }
-      } else if (/^manufacturer_/.test(key)) {
-        manufacturers.push(v)
-      } else if (/^partNumber_/.test(key)) {
-        parts.push(v)
-      } else if (key === 'quantity') {
-        let q = parseInt(v, 10)
-        if (isNaN(q) || q < 1) {
-          warnings.push({
-            title: 'Invalid quantity',
-            message: `Row ${i} has an invalid quantity: ${q}. Defaulting to 1. `
-          })
-          q = 1
-        }
-        newLine.quantity = q
-      } else {
-        newLine[key] = v
-      }
-    }
-    newLine.partNumbers = parts.map((part, i) => {
-      return {part, manufacturer: manufacturers[i] || ''}
-    })
-    return newLine
-  })
+  lines = lines.map(processLine.bind(null, warnings))
   return {lines, warnings}
+}
+
+function processLine(warnings, line, i) {
+  const newLine = {
+    row: i + 1,
+    retailers: {
+      Digikey: '',
+      RS: '',
+      Mouser: '',
+      Farnell: '',
+      Newark: ''
+    }
+  }
+  const manufacturers = []
+  const parts = []
+  for (const key in line) {
+    const v = stripQuotes(line[key].trim())
+    if (lineData.retailer_list.indexOf(key) >= 0) {
+      if (key === 'Digikey') {
+        newLine.retailers[key] = v
+      } else {
+        newLine.retailers[key] = v.replace(/-/g, '')
+      }
+    } else if (/^manufacturer_/.test(key)) {
+      manufacturers.push(v)
+    } else if (/^partNumber_/.test(key)) {
+      parts.push(v)
+    } else if (key === 'quantity') {
+      let q = parseInt(v, 10)
+      if (isNaN(q) || q < 1) {
+        warnings.push({
+          title: 'Invalid quantity',
+          message: `Row ${i} has an invalid quantity: ${q}. Defaulting to 1. `
+        })
+        q = 1
+      }
+      newLine.quantity = q
+    } else {
+      newLine[key] = v
+    }
+  }
+  newLine.partNumbers = parts.map((part, i) => {
+    return {part, manufacturer: manufacturers[i] || ''}
+  })
+  return newLine
 }
 
 //finds the first row with the most columns
