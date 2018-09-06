@@ -75,6 +75,14 @@ describe('parseTSV', function() {
     expect(result.lines[0].row).to.equal(1)
     expect(result.lines[1].row).to.equal(2)
   })
+
+  it('handles retailer column', () => {
+    const result = parseTSV(
+      'References\tQty\tRetailer\tPart No.\ntest1\t1\tFEC\tpart1\ntest2\t2\tMouser\tpart2\n'
+    )
+    expect(result.lines[0].retailers.Farnell).to.equal('part1')
+    expect(result.lines[1].retailers.Mouser).to.equal('part2')
+  })
 })
 
 describe('stripQuotes', function() {

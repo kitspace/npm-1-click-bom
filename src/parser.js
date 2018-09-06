@@ -2,6 +2,21 @@
 const xlsx = require('xlsx')
 const lineData = require('./line_data')
 
+const retailerAliases = {
+  Farnell: 'Farnell',
+  FEC: 'Farnell',
+  Premier: 'Farnell',
+  element14: 'Farnell',
+  'Digi(-| )?key': 'Digikey',
+  Mouser: 'Mouser',
+  RS: 'RS',
+  'RS(-| )?Online': 'RS',
+  'RS(-| )?Delivers': 'RS',
+  'Radio(-| )?Spares': 'RS',
+  'RS(-| )?Components': 'RS',
+  Newark: 'Newark'
+}
+
 const headings = {
   'refs?': 'reference',
   'references?': 'reference',
@@ -33,18 +48,16 @@ const headings = {
   'manufacturers?': 'manufacturer',
   'm/?f': 'manufacturer',
   'manuf\\.?': 'manufacturer',
-  Farnell: 'Farnell',
-  FEC: 'Farnell',
-  Premier: 'Farnell',
-  element14: 'Farnell',
-  'Digi(-| )?key': 'Digikey',
-  Mouser: 'Mouser',
-  RS: 'RS',
-  'RS(-| )?Online': 'RS',
-  'RS(-| )?Delivers': 'RS',
-  'Radio(-| )?Spares': 'RS',
-  'RS(-| )?Components': 'RS',
-  Newark: 'Newark'
+  'retailers?': 'retailer',
+  'retail\\.?': 'retailer',
+  'suppliers?': 'retailer',
+  'suppl\\.?': 'retailer',
+  'retail\\.? part no\\.?': 'retailerPart',
+  'retailer part number': 'retailerPart',
+  'suppl\\.? part no\\.?': 'retailerPart',
+  'supplier part number': 'retailerPart',
+  'part no\\.?': 'retailerPart',
+  'part number\\.?': 'retailerPart'
 }
 
 function parse(text) {
@@ -85,15 +98,17 @@ function toLines(sheet, warnings) {
       invalid: [{row: 1, reason: 'Could not find header'}]
     }
   }
-  const hs = aoa[h].map(x => lookup(x, headings)).map((x, i) => {
-    if (x === 'manufacturer') {
-      return `manufacturer_${i}`
-    }
-    if (x === 'partNumber') {
-      return `partNumber_${i}`
-    }
-    return x
-  })
+  const hs = aoa[h]
+    .map(x => lookup(x, headings) || lookup(x, retailerAliases))
+    .map((x, i) => {
+      if (x === 'manufacturer') {
+        return `manufacturer_${i}`
+      }
+      if (x === 'partNumber') {
+        return `partNumber_${i}`
+      }
+      return x
+    })
   if (hs.indexOf('quantity') < 0) {
     return {
       lines: [],
@@ -124,18 +139,18 @@ function toLines(sheet, warnings) {
 }
 
 function processLine(warnings, line, i) {
+  const emptyRetailers = {}
+  lineData.retailer_list.forEach(r => {
+    emptyRetailers[r] = ''
+  })
   const newLine = {
     row: i + 1,
-    retailers: {
-      Digikey: '',
-      RS: '',
-      Mouser: '',
-      Farnell: '',
-      Newark: ''
-    }
+    retailers: emptyRetailers
   }
   const manufacturers = []
   const parts = []
+  const retailers = []
+  const retailerParts = []
   for (const key in line) {
     const v = stripQuotes(line[key].trim())
     if (lineData.retailer_list.indexOf(key) >= 0) {
@@ -148,6 +163,10 @@ function processLine(warnings, line, i) {
       manufacturers.push(v)
     } else if (/^partNumber_/.test(key)) {
       parts.push(v)
+    } else if (key === 'retailer') {
+      retailers.push(lookup(v, retailerAliases))
+    } else if (key === 'retailerPart') {
+      retailerParts.push(v)
     } else if (key === 'quantity') {
       let q = parseInt(v, 10)
       if (isNaN(q) || q < 1) {
@@ -164,6 +183,13 @@ function processLine(warnings, line, i) {
   }
   newLine.partNumbers = parts.map((part, i) => {
     return {part, manufacturer: manufacturers[i] || ''}
+  })
+  // handle retailer/part columns
+  retailerParts.forEach((part, i) => {
+    const r = retailers[i]
+    if (r) {
+      newLine.retailers[r] = part
+    }
   })
   return newLine
 }
