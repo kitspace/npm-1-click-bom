@@ -8,8 +8,7 @@ var lineData = require('../lib/main').lineData
 describe('parseTSV', function() {
     it('catches negative quantities', function() {
         var result = parseTSV('References\tQty\tFarnell\ntest\t-1\t898989')
-        expect(result.lines.length).to.equal(0)
-        expect(result.invalid[0].reason).to.equal('Quantity is less than one.')
+        expect(result.warnings.length).to.equal(1)
     })
 
     it('replaces dashes', function() {

@@ -73,14 +73,14 @@ function parse(text) {
   }
   const sheet = x.Sheets[sheetName]
 
-  return {lines: toLines(sheet), warnings}
+  return toLines(sheet, warnings)
 }
 
 function parseTSV(text) {
   return parse(text)
 }
 
-function toLines(sheet) {
+function toLines(sheet, warnings) {
   const aoa = sheet_to_aoa(sheet)
   const h = findHeader(aoa)
   if (h < 0) {
@@ -95,28 +95,42 @@ function toLines(sheet) {
     }
     return x
   })
-  const lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
-  return lines.map(line => {
-    const newLine = {retailers: {}}
-    const manufacturers = []
-    const parts = []
-    for (const key in line) {
-      if (lineData.retailer_list.includes(key)) {
-        newLine.retailers[key] = line[key]
-      } else if (/^manufacturer_/.test(key)) {
-        manufacturers.push({manufacturer: line[key]})
-      } else if (/^partNumber_/.test(key)) {
-        parts.push({part: line[key]})
+  let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
+  lines = lines.map((line, i) => {
+      const newLine = {retailers: {}}
+      const manufacturers = []
+      const parts = []
+      for (const key in line) {
+        const v = line[key]
+        if (lineData.retailer_list.includes(key)) {
+          newLine.retailers[key] = v
+        } else if (/^manufacturer_/.test(key)) {
+          manufacturers.push({manufacturer: v})
+        } else if (/^partNumber_/.test(key)) {
+          parts.push({part: v})
+        } else if (key === 'quantity') {
+          let q = parseInt(v, 10)
+          if (isNaN(q) || q < 1) {
+            warnings.push({
+              title: 'Invalid quantity',
+              message: `Row ${i} has an invalid quantity: ${q}. Defaulting to 1. `
+            })
+            q = 1
+          }
+          newLine.quantity = q
+        } else {
+          newLine[key] = line[key]
+        }
       }
-      else {
-        newLine[key] = line[key]
-      }
-    }
-    newLine.partNumbers = parts.map((part, i) => {
-      return {part, manufacturer: manufacturers[i] || ''}
+      newLine.partNumbers = parts.map((part, i) => {
+        return {part, manufacturer: manufacturers[i] || ''}
+      })
+      return newLine
     })
-    return newLine
-  })
+  return {lines, warnings}
+}
+
+function processLines(line, i) {
 }
 
 //finds the first row with the most columns
