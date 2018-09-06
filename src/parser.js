@@ -101,7 +101,7 @@ function toLines(sheet, warnings) {
     const manufacturers = []
     const parts = []
     for (const key in line) {
-      const v = line[key].trim()
+      const v = stripQuotes(line[key].trim())
       if (lineData.retailer_list.includes(key)) {
         if (key === 'Digikey') {
           newLine.retailers[key] = v
@@ -171,5 +171,18 @@ function sheet_to_aoa(sheet) {
   return xlsx.utils.sheet_to_json(sheet, {header: 1, range: 0})
 }
 
+function stripQuotes(str) {
+  var ret = str
+  if (ret[0] === '"' || ret[0] === "'") {
+    ret = ret.substr(1)
+  }
+  var last = ret.length - 1
+  if (ret[last] === '"' || ret[last] === "'") {
+    ret = ret.substr(0, last)
+  }
+  return ret
+}
+
 exports.parseTSV = parseTSV
 exports.parse = parse
+exports.stripQuotes = stripQuotes
