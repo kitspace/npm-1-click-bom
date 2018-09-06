@@ -97,41 +97,44 @@ function toLines(sheet, warnings) {
   })
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
   lines = lines.map((line, i) => {
-      const newLine = {retailers: {}}
-      const manufacturers = []
-      const parts = []
-      for (const key in line) {
-        const v = line[key]
-        if (lineData.retailer_list.includes(key)) {
+    const newLine = {retailers: {}}
+    const manufacturers = []
+    const parts = []
+    for (const key in line) {
+      const v = line[key]
+      if (lineData.retailer_list.includes(key)) {
+        if (key === 'Digikey') {
           newLine.retailers[key] = v
-        } else if (/^manufacturer_/.test(key)) {
-          manufacturers.push({manufacturer: v})
-        } else if (/^partNumber_/.test(key)) {
-          parts.push({part: v})
-        } else if (key === 'quantity') {
-          let q = parseInt(v, 10)
-          if (isNaN(q) || q < 1) {
-            warnings.push({
-              title: 'Invalid quantity',
-              message: `Row ${i} has an invalid quantity: ${q}. Defaulting to 1. `
-            })
-            q = 1
-          }
-          newLine.quantity = q
         } else {
-          newLine[key] = line[key]
+          newLine.retailers[key] = v.replace(/-/g, '')
         }
+      } else if (/^manufacturer_/.test(key)) {
+        manufacturers.push({manufacturer: v})
+      } else if (/^partNumber_/.test(key)) {
+        parts.push({part: v})
+      } else if (key === 'quantity') {
+        let q = parseInt(v, 10)
+        if (isNaN(q) || q < 1) {
+          warnings.push({
+            title: 'Invalid quantity',
+            message: `Row ${i} has an invalid quantity: ${q}. Defaulting to 1. `
+          })
+          q = 1
+        }
+        newLine.quantity = q
+      } else {
+        newLine[key] = line[key]
       }
-      newLine.partNumbers = parts.map((part, i) => {
-        return {part, manufacturer: manufacturers[i] || ''}
-      })
-      return newLine
+    }
+    newLine.partNumbers = parts.map((part, i) => {
+      return {part, manufacturer: manufacturers[i] || ''}
     })
+    return newLine
+  })
   return {lines, warnings}
 }
 
-function processLines(line, i) {
-}
+function processLines(line, i) {}
 
 //finds the first row with the most columns
 function findHeader(aoa) {
