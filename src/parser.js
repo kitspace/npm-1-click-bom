@@ -76,10 +76,6 @@ function parse(text) {
   return toLines(sheet, warnings)
 }
 
-function parseTSV(text) {
-  return parse(text)
-}
-
 function toLines(sheet, warnings) {
   const aoa = sheet_to_aoa(sheet)
   const h = findHeader(aoa)
@@ -134,8 +130,6 @@ function toLines(sheet, warnings) {
   return {lines, warnings}
 }
 
-function processLines(line, i) {}
-
 //finds the first row with the most columns
 function findHeader(aoa) {
   const {i} = aoa.reduce(
@@ -183,6 +177,6 @@ function stripQuotes(str) {
   return ret
 }
 
-exports.parseTSV = parseTSV
+exports.parseTSV = parse
 exports.parse = parse
 exports.stripQuotes = stripQuotes
