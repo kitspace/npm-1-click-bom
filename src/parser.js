@@ -93,7 +93,7 @@ function toLines(sheet, warnings) {
   })
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
   lines = lines.map((line, i) => {
-    const newLine = {retailers: {}}
+    const newLine = {row: i + 1, retailers: {}}
     const manufacturers = []
     const parts = []
     for (const key in line) {

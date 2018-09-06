@@ -58,7 +58,7 @@ describe('parseTSV', function() {
         expect(result.lines[0].partNumbers[0].part).to.equal('mpn')
     })
 
-    it("keep track of line numbers", function() {
+    it("keeps track of line numbers", function() {
         var result = parseTSV('References\tQty\tPart Number\ntest1\t1\tmpn\ntest2\t1\tmpn\n')
         expect(result.lines[0].row).to.equal(1)
         expect(result.lines[1].row).to.equal(2)
