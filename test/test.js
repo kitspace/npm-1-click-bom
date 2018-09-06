@@ -22,15 +22,14 @@ describe('parseTSV', function() {
     })
 
     it('trims whitespace', function() {
-        var result = parseTSV('References\tQty\tPart Number\tDigikey\tFarnell\n test \t1\t part number \t 898989 \t`')
+        var result = parseTSV('References\tQty\tPart Number\tDigikey\tFarnell\n test \t1\t part number \t 898989 \n')
         expect(result.lines[0].retailers.Digikey).to.equal('898989')
         expect(result.lines[0].partNumbers[0].part).to.equal('part number')
         expect(result.lines[0].reference).to.equal('test')
     })
 
     it('understands aliases', function() {
-        var result = parseTSV('Parts\tquantity\tMfg_Part_No\tDigi-key\tElement14\n test \t1\t part number \t 898989 \t`')
-        console.log(result)
+        var result = parseTSV('Parts\tquantity\tMfg_Part_No\tDigi-key\tElement14\n test \t1\t part number \t 898989 \n')
         expect(result.warnings.length).to.equal(0)
         expect(result.errors).to.equal(undefined)
         expect(result.lines[0].retailers.Digikey).to.equal('898989')
@@ -39,7 +38,7 @@ describe('parseTSV', function() {
     })
 
     it('adds manufacturer to part number', function() {
-        var result = parseTSV('References\tQty\tManufacturer\tPart Number\ntest\t1\tman\tmpn1\t`')
+        var result = parseTSV('References\tQty\tManufacturer\tPart Number\ntest\t1\tman\tmpn1')
         expect(result.lines[0].partNumbers[0].manufacturer).to.equal('man')
         expect(result.lines[0].partNumbers[0].part).to.equal('mpn1')
     })
