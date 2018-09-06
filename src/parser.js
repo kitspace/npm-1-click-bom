@@ -101,7 +101,7 @@ function toLines(sheet, warnings) {
     const manufacturers = []
     const parts = []
     for (const key in line) {
-      const v = line[key]
+      const v = line[key].trim()
       if (lineData.retailer_list.includes(key)) {
         if (key === 'Digikey') {
           newLine.retailers[key] = v
@@ -109,9 +109,9 @@ function toLines(sheet, warnings) {
           newLine.retailers[key] = v.replace(/-/g, '')
         }
       } else if (/^manufacturer_/.test(key)) {
-        manufacturers.push({manufacturer: v})
+        manufacturers.push(v)
       } else if (/^partNumber_/.test(key)) {
-        parts.push({part: v})
+        parts.push(v)
       } else if (key === 'quantity') {
         let q = parseInt(v, 10)
         if (isNaN(q) || q < 1) {
@@ -123,7 +123,7 @@ function toLines(sheet, warnings) {
         }
         newLine.quantity = q
       } else {
-        newLine[key] = line[key]
+        newLine[key] = v
       }
     }
     newLine.partNumbers = parts.map((part, i) => {
