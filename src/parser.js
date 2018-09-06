@@ -1,59 +1,59 @@
 'use strict'
-var xlsx = require('xlsx')
-var lineData = require('./line_data')
+const xlsx = require('xlsx')
+const lineData = require('./line_data')
 
-var retailer_aliases = {
-  Farnell: 'Farnell',
-  FEC: 'Farnell',
-  Premier: 'Farnell',
-  element14: 'Farnell',
-  'Digi(-| )?key': 'Digikey',
-  Mouser: 'Mouser',
-  RS: 'RS',
-  'RS(-| )?Online': 'RS',
-  'RS(-| )?Delivers': 'RS',
-  'Radio(-| )?Spares': 'RS',
-  'RS(-| )?Components': 'RS',
-  Newark: 'Newark'
+const retailer_aliases = {
+  Farnell              : 'Farnell',
+  FEC                  : 'Farnell',
+  Premier              : 'Farnell',
+  element14            : 'Farnell',
+  'Digi(-| )?key'      : 'Digikey',
+  Mouser               : 'Mouser',
+  RS                   : 'RS',
+  'RS(-| )?Online'     : 'RS',
+  'RS(-| )?Delivers'   : 'RS',
+  'Radio(-| )?Spares'  : 'RS',
+  'RS(-| )?Components' : 'RS',
+  Newark               : 'Newark'
 }
 
-var headings = {
-  'refs?': 'reference',
-  'references?': 'reference',
-  'line(-| )?notes?': 'reference',
+const headings = {
+  'refs?'                      : 'reference',
+  'references?'                : 'reference',
+  'line(-| )?notes?'           : 'reference',
   //not happy about this one but it's an eagle default in bom.ulp
-  parts: 'reference',
-  'comments?': 'description',
-  'descriptions?': 'description',
-  'cmnts?': 'description',
-  'descrs?': 'description',
-  'qn?tys?': 'quantity',
-  quantity: 'quantity',
-  quantities: 'quantity',
-  'quant.?': 'quantity',
-  'co?u?nt': 'quantity',
-  'part(-| )?numbers?': 'partNumber',
-  'm/?f parts?': 'partNumber',
-  'manuf\\.? parts?': 'partNumber',
-  'mpns?': 'partNumber',
-  'm/?f part numbers?': 'partNumber',
-  'manuf\\.? part numbers?': 'partNumber',
-  'manufacturer parts?': 'partNumber',
-  'manufacturer part numbers?': 'partNumber',
-  'prts?': 'partNumber',
-  'manuf#': 'partNumber',
-  'ma?n?fr part.*': 'partNumber',
-  mfpn: 'partNumber',
-  'mfg.?part.*': 'partNumber',
-  'manufacturers?': 'manufacturer',
-  'm/?f': 'manufacturer',
-  'manuf\\.?': 'manufacturer'
+  parts                        : 'reference',
+  'comments?'                  : 'description',
+  'descriptions?'              : 'description',
+  'cmnts?'                     : 'description',
+  'descrs?'                    : 'description',
+  'qn?tys?'                    : 'quantity',
+  quantity                     : 'quantity',
+  quantities                   : 'quantity',
+  'quant.?'                    : 'quantity',
+  'co?u?nt'                    : 'quantity',
+  'part(-| )?numbers?'         : 'partNumber',
+  'm/?f parts?'                : 'partNumber',
+  'manuf\\.? parts?'           : 'partNumber',
+  'mpns?'                      : 'partNumber',
+  'm/?f part numbers?'         : 'partNumber',
+  'manuf\\.? part numbers?'    : 'partNumber',
+  'manufacturer parts?'        : 'partNumber',
+  'manufacturer part numbers?' : 'partNumber',
+  'prts?'                      : 'partNumber',
+  'manuf#'                     : 'partNumber',
+  'ma?n?fr part.*'             : 'partNumber',
+  mfpn                         : 'partNumber',
+  'mfg.?part.*'                : 'partNumber',
+  'manufacturers?'             : 'manufacturer',
+  'm/?f'                       : 'manufacturer',
+  'manuf\\.?'                  : 'manufacturer'
 }
 
 //a case insensitive match
 function lookup(name, obj) {
-  for (var key in obj) {
-    var re = RegExp(key, 'i')
+  for (const key in obj) {
+    const re = RegExp(key, 'i')
     if (name.match(re)) {
       return obj[key]
     }
@@ -63,11 +63,11 @@ function lookup(name, obj) {
 }
 
 function stripQuotes(str) {
-  var ret = str
+  const ret = str
   if (ret[0] === '"' || ret[0] === "'") {
     ret = ret.substr(1)
   }
-  var last = ret.length - 1
+  const last = ret.length - 1
   if (ret[last] === '"' || ret[last] === "'") {
     ret = ret.substr(0, last)
   }
@@ -82,28 +82,28 @@ function sanitize(str) {
 }
 
 function checkValidLines(lines_incoming, invalid, warnings) {
-  var lines = []
-  for (var line of lines_incoming) {
+  const lines = []
+  for (const line of lines_incoming) {
     if (invalid.length > 10) {
       lines = []
       break
     }
-    var number = parseInt(line.quantity)
+    const number = parseInt(line.quantity)
     if (isNaN(number)) {
       invalid.push({row: line.row, reason: 'Quantity is not a number.'})
     } else if (number < 1) {
       invalid.push({row: line.row, reason: 'Quantity is less than one.'})
     } else {
       line.quantity = number
-      for (var key in line.retailers) {
-        var v = line.retailers[key]
+      for (const key in line.retailers) {
+        const v = line.retailers[key]
         if (v == null) {
           line.retailers[key] = ''
         } else if (key !== 'Digikey') {
           line.retailers[key] = v.replace(/-/g, '')
         }
       }
-      for (var field of lineData.field_list) {
+      for (const field of lineData.field_list) {
         if (line[field] == null) {
           line[field] = ''
         }
@@ -115,19 +115,19 @@ function checkValidLines(lines_incoming, invalid, warnings) {
 }
 
 function parseNamed(rows, order, retailers) {
-  var lines = []
-  var invalid = []
-  for (var index = 0; index < rows.length; index++) {
-    var row = rows[index]
+  const lines = []
+  const invalid = []
+  for (let index = 0; index < rows.length; index++) {
+    const row = rows[index]
     if (row !== '') {
-      var cells = row.split('\t')
+      const cells = row.split('\t')
 
-      var rs = function() {
-        var retailersObj = {}
-        for (var r of lineData.retailer_list) {
+      const rs = function() {
+        const retailersObj = {}
+        for (const r of lineData.retailer_list) {
           retailersObj[r] = ''
         }
-        for (r of retailers) {
+        for (const r of retailers) {
           if (cells[order.indexOf(r)] != null) {
             retailersObj[`${r}`] = sanitize(cells[order.indexOf(r)])
           }
@@ -135,26 +135,25 @@ function parseNamed(rows, order, retailers) {
         return retailersObj
       }
 
-      var parts = function() {
-        var field, i
-        var part_list = []
-        var part_indexes = []
-        var manuf_indexes = []
-        for (i = 0; i < order.length; i++) {
-          field = order[i]
+      const parts = function() {
+        const part_list = []
+        const part_indexes = []
+        const manuf_indexes = []
+        for (let i = 0; i < order.length; i++) {
+          const field = order[i]
           if (field === 'partNumber') {
             part_indexes.push(i)
           }
         }
-        for (i = 0; i < order.length; i++) {
-          field = order[i]
+        for (let i = 0; i < order.length; i++) {
+          const field = order[i]
           if (field === 'manufacturer') {
             manuf_indexes.push(i)
           }
         }
-        for (i = 0; i < part_indexes.length; i++) {
-          var manuf, manuf_index
-          var part_index = part_indexes[i]
+        for (let i = 0; i < part_indexes.length; i++) {
+          let manuf, manuf_index
+          const part_index = part_indexes[i]
           try {
             manuf_index = manuf_indexes[i]
           } catch (error) {}
@@ -163,13 +162,13 @@ function parseNamed(rows, order, retailers) {
           } else {
             manuf = ''
           }
-          var part = sanitize(cells[part_index])
+          const part = sanitize(cells[part_index])
           part_list.push({part, manufacturer: manuf})
         }
         return part_list
       }
 
-      var line = {
+      const line = {
         reference: sanitize(cells[order.indexOf('reference')]),
         quantity: sanitize(cells[order.indexOf('quantity')]),
         description: sanitize(cells[order.indexOf('description')]),
@@ -198,7 +197,7 @@ function parseNamed(rows, order, retailers) {
 }
 
 function hasNamedColumns(cells) {
-  for (var cell of cells) {
+  for (const cell of cells) {
     if (lookup(cell, headings) != null) {
       return true
     }
@@ -208,29 +207,29 @@ function hasNamedColumns(cells) {
 }
 
 function getOrder(cells) {
-  var v
-  var order = []
-  var retailers = []
-  var warnings = []
+  let v
+  const order = []
+  const retailers = []
+  const warnings = []
 
-  var possible_names = {}
-  for (var k in headings) {
+  const possible_names = {}
+  for (const k in headings) {
     v = headings[k]
     possible_names[k] = v
   }
-  for (k in retailer_aliases) {
+  for (const k in retailer_aliases) {
     v = retailer_aliases[k]
     possible_names[k] = v
   }
 
-  for (var cell of cells) {
+  for (const cell of cells) {
     if (cell === '') {
       //this is an empty column, it happen if you ctrl select several
       //columns in a spreadsheet for example
       order.push('')
     } else {
-      var heading = lookup(cell, possible_names)
-      var retailer = lookup(cell, retailer_aliases)
+      const heading = lookup(cell, possible_names)
+      const retailer = lookup(cell, retailer_aliases)
       if (retailer != null) {
         retailers.push(retailer)
       }
@@ -250,9 +249,10 @@ function getOrder(cells) {
 }
 
 function parse(text) {
-  var warnings = []
+  const warnings = []
+  let x
   try {
-    var x = xlsx.read(text, {type: 'buffer'})
+    x = xlsx.read(text, {type: 'buffer'})
   } catch (e) {
     return {
       lines: [],
@@ -265,7 +265,7 @@ function parse(text) {
       invalid: [{row: 1, reason: 'No data'}]
     }
   }
-  var sheetName = x.SheetNames[0]
+  const sheetName = x.SheetNames[0]
   if (x.Sheets.length > 1) {
     warnings.push({
       title: 'Multiple worksheets found in spreadsheet',
@@ -277,11 +277,10 @@ function parse(text) {
 }
 
 function parseTSV(text, warnings = []) {
-  var warnings = []
-  var invalid, lines
-  var rows = text.split('\n')
-  var firstCells = rows[0].split('\t')
-  var l = firstCells.length
+  let invalid, lines
+  const rows = text.split('\n')
+  const firstCells = rows[0].split('\t')
+  const l = firstCells.length
   if (l < 2) {
     return {
       lines: [],
@@ -304,11 +303,10 @@ At least 3 are required.`
       ]
     }
   }
-  var order, reason, retailers
-  var result = getOrder(firstCells)
-  var order = result.order
-  var reason = result.reason
-  var retailers = result.retailers
+  let result = getOrder(firstCells)
+  const order = result.order
+  const reason = result.reason
+  const retailers = result.retailers
   if (!(order != null && retailers != null)) {
     return {
       lines: [],
