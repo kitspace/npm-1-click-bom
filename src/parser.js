@@ -166,11 +166,11 @@ function sheet_to_aoa(sheet) {
 }
 
 function stripQuotes(str) {
-  var ret = str
+  let ret = str
   if (ret[0] === '"' || ret[0] === "'") {
     ret = ret.substr(1)
   }
-  var last = ret.length - 1
+  const last = ret.length - 1
   if (ret[last] === '"' || ret[last] === "'") {
     ret = ret.substr(0, last)
   }
