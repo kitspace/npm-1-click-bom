@@ -135,3 +135,4 @@ exports.hasSKUs = hasSKUs
 exports.merge = merge
 exports.maxPartNumbers = maxPartNumbers
 exports.toRetailers = toRetailers
+exports.isComplete = isComplete

@@ -8,7 +8,8 @@ const {
   hasSKUs,
   merge,
   maxPartNumbers,
-  toRetailers
+  toRetailers,
+  isComplete
 } = require('./line_data')
 
 exports.parse = parse
@@ -21,3 +22,4 @@ exports.hasSKUs = hasSKUs
 exports.merge = merge
 exports.maxPartNumbers = maxPartNumbers
 exports.toRetailers = toRetailers
+exports.isComplete = isComplete
