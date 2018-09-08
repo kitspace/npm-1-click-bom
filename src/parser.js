@@ -58,7 +58,14 @@ const headings = {
   'suppl\\.? part no\\.?': 'retailerPart',
   'supplier part number': 'retailerPart',
   'part no\\.?': 'retailerPart',
-  'part number\\.?': 'retailerPart'
+  'part number\\.?': 'retailerPart',
+  fitted: 'fitted',
+  fit: 'fitted',
+  stuff: 'fitted',
+  'do not fit': 'notFitted',
+  'do not stuff': 'notFitted',
+  dnf: 'notFitted',
+  dns: 'notFitted'
 }
 
 function parse(text) {
@@ -138,6 +145,7 @@ function toLines(sheet, warnings) {
   lines = lines
     .map(processLine.bind(null, warnings))
     .filter(l => l.quantity > 0)
+    .filter(l => l.fitted)
   return {lines, warnings, invalid: []}
 }
 
@@ -172,7 +180,7 @@ function processLine(warnings, line, i) {
       retailerParts.push(v)
     } else if (key === 'quantity') {
       let q = parseInt(v, 10)
-      if (isNaN(q) || q < 0) {
+      if (isNaN(q) || q <= 0) {
         warnings.push({
           title: 'Invalid quantity',
           message: `Row ${i} has an invalid quantity: ${v}. Removing this line.`
@@ -180,6 +188,21 @@ function processLine(warnings, line, i) {
         q = 0
       }
       newLine.quantity = q
+    } else if (key === 'notFitted') {
+      newLine.fitted =
+        /^0$/.test(v) ||
+        /false/i.test(v) ||
+        /^fitted$/i.test(v) ||
+        /^fit$/i.test(v) ||
+        /^stuff$/i.test(v) ||
+        /^stuffed$/i.test(v)
+    } else if (key === 'fitted') {
+      newLine.fitted = !(
+        /^0$/i.test(v) ||
+        /false/i.test(v) ||
+        /not/i.test(v) ||
+        /dn(f|s)/i.test(v)
+      )
     } else {
       newLine[key] = v
     }
@@ -194,6 +217,9 @@ function processLine(warnings, line, i) {
       newLine.retailers[r] = part
     }
   })
+  if (newLine.fitted == null) {
+    newLine.fitted = true
+  }
   return newLine
 }
 

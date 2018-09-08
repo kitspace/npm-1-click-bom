@@ -83,9 +83,28 @@ describe('parseTSV', function() {
     expect(result.lines[0].retailers.Farnell).to.equal('part1')
     expect(result.lines[1].retailers.Mouser).to.equal('part2')
   })
+
   it('always returns an invalid array', () =>  {
     var result = parseTSV('References\tQty\tFarnell\ntest\t-1\t898989')
     expect(result.invalid.length).to.equal(0)
+  })
+
+  it('handles do not fit column', () =>  {
+    let result = parseTSV('References\tQty\tFarnell\tDNF\ntest\t1\t898989\tDNF')
+    expect(result.lines.length).to.equal(0)
+    result = parseTSV('References\tQty\tFarnell\tDNS\ntest\t1\t898989\ttrue')
+    expect(result.lines.length).to.equal(0)
+    result = parseTSV('References\tQty\tFarnell\tDo not fit\ntest\t1\t898989\tfitted\ntest\t1\t898989\tnot fitted')
+    expect(result.lines.length).to.equal(1)
+    result = parseTSV('References\tQty\tFarnell\tDNF\ntest\t1\t898989\ttrue\ntest\t1\t898989\ttrue')
+    expect(result.lines.length).to.equal(0)
+  })
+
+  it('handles fitted column', () =>  {
+    let result = parseTSV('References\tQty\tFarnell\tFitted\ntest\t1\t898989\ttrue\ntest2\t2\t318787\tDNF')
+    expect(result.lines.length).to.equal(1)
+    result = parseTSV('References\tQty\tFarnell\tFitted\ntest\t1\t898989\tFitted\ntest2\t2\t318787\tNot Fitted')
+    expect(result.lines.length).to.equal(1)
   })
 })
 
