@@ -13,13 +13,11 @@ function getEmptyRetailers() {
   return r
 }
 
-exports.field_list = ['partNumbers', 'description']
-
-exports.isComplete = function(lines) {
+function isComplete(lines) {
   return exports.numberOfEmpty(lines) === 0
 }
 
-exports.hasSKUs = function(lines) {
+function hasSKUs(lines) {
   return lines.reduce(function(prev, line) {
     return retailer_list.reduce(function(prev, r) {
       return prev || line.retailers[r] !== ''
@@ -27,7 +25,7 @@ exports.hasSKUs = function(lines) {
   }, false)
 }
 
-exports.numberOfEmpty = function numberOfEmpty(lines) {
+function numberOfEmpty(lines) {
   return lines.reduce(function(prev, line) {
     if (line.partNumbers.length < 1) {
       prev += 1
@@ -41,13 +39,13 @@ exports.numberOfEmpty = function numberOfEmpty(lines) {
   }, 0)
 }
 
-exports.maxPartNumbers = function maxPartNumbers(lines) {
+function maxPartNumbers(lines) {
   return lines.reduce(function(prev, line) {
     return Math.max(prev, line.partNumbers.length)
   }, 0)
 }
 
-exports.toRetailers = function toRetailers(lines) {
+function toRetailers(lines) {
   const retailers = {}
   retailer_list.forEach(r => {
     retailers[r] = lines.map(l => l.retailers[r])
@@ -55,7 +53,7 @@ exports.toRetailers = function toRetailers(lines) {
   return retailers
 }
 
-exports.merge = function(lines1, lines2) {
+function merge(lines1, lines2) {
   var d
   var warnings = []
   var duplicates = {}
@@ -132,3 +130,8 @@ exports.merge = function(lines1, lines2) {
 exports.retailer_list = retailer_list
 exports.getRetailers = getRetailers
 exports.getEmptyRetailers = getEmptyRetailers
+exports.numberOfEmpty = numberOfEmpty
+exports.hasSKUs = hasSKUs
+exports.merge = merge
+exports.maxPartNumbers = maxPartNumbers
+exports.toRetailers = toRetailers
