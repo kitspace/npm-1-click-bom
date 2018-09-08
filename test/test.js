@@ -84,26 +84,34 @@ describe('parseTSV', function() {
     expect(result.lines[1].retailers.Mouser).to.equal('part2')
   })
 
-  it('always returns an invalid array', () =>  {
+  it('always returns an invalid array', () => {
     var result = parseTSV('References\tQty\tFarnell\ntest\t-1\t898989')
     expect(result.invalid.length).to.equal(0)
   })
 
-  it('handles do not fit column', () =>  {
+  it('handles do not fit column', () => {
     let result = parseTSV('References\tQty\tFarnell\tDNF\ntest\t1\t898989\tDNF')
     expect(result.lines.length).to.equal(0)
     result = parseTSV('References\tQty\tFarnell\tDNS\ntest\t1\t898989\ttrue')
     expect(result.lines.length).to.equal(0)
-    result = parseTSV('References\tQty\tFarnell\tDo not fit\ntest\t1\t898989\tfitted\ntest\t1\t898989\tnot fitted')
+    result = parseTSV(
+      'References\tQty\tFarnell\tDo not fit\ntest\t1\t898989\tfitted\ntest\t1\t898989\tnot fitted'
+    )
     expect(result.lines.length).to.equal(1)
-    result = parseTSV('References\tQty\tFarnell\tDNF\ntest\t1\t898989\ttrue\ntest\t1\t898989\ttrue')
+    result = parseTSV(
+      'References\tQty\tFarnell\tDNF\ntest\t1\t898989\ttrue\ntest\t1\t898989\ttrue'
+    )
     expect(result.lines.length).to.equal(0)
   })
 
-  it('handles fitted column', () =>  {
-    let result = parseTSV('References\tQty\tFarnell\tFitted\ntest\t1\t898989\ttrue\ntest2\t2\t318787\tDNF')
+  it('handles fitted column', () => {
+    let result = parseTSV(
+      'References\tQty\tFarnell\tFitted\ntest\t1\t898989\ttrue\ntest2\t2\t318787\tDNF'
+    )
     expect(result.lines.length).to.equal(1)
-    result = parseTSV('References\tQty\tFarnell\tFitted\ntest\t1\t898989\tFitted\ntest2\t2\t318787\tNot Fitted')
+    result = parseTSV(
+      'References\tQty\tFarnell\tFitted\ntest\t1\t898989\tFitted\ntest2\t2\t318787\tNot Fitted'
+    )
     expect(result.lines.length).to.equal(1)
   })
 })
@@ -161,45 +169,23 @@ describe('lineData.hasSKUs', function() {
   it('returns false with no skus', function() {
     const lines = [
       {
-        retailers: {
-          Digikey: '',
-          Mouser: '',
-          RS: '',
-          Newark: '',
-          Farnell: ''
-        }
+        retailers: lineData.getEmptyRetailers()
       },
       {
-        retailers: {
-          Digikey: '',
-          Mouser: '',
-          RS: '',
-          Newark: '',
-          Farnell: ''
-        }
+        retailers: lineData.getEmptyRetailers()
       }
     ]
     expect(lineData.hasSKUs(lines)).to.equal(false)
   })
   it('returns true when there is an sku', function() {
+    const retailers = lineData.getEmptyRetailers()
+    retailers.Newark = 'x'
     const lines = [
       {
-        retailers: {
-          Digikey: '',
-          Mouser: '',
-          RS: '',
-          Newark: 'x',
-          Farnell: ''
-        }
+        retailers
       },
       {
-        retailers: {
-          Digikey: '',
-          Mouser: '',
-          RS: '',
-          Newark: '',
-          Farnell: ''
-        }
+        retailers: lineData.getEmptyRetailers()
       }
     ]
     expect(lineData.hasSKUs(lines)).to.equal(true)

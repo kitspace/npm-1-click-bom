@@ -1,7 +1,17 @@
 'use strict'
-var retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
+const retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
 
-exports.retailer_list = retailer_list
+function getRetailers() {
+  return retailer_list.slice()
+}
+
+function getEmptyRetailers() {
+  const r = {}
+  retailer_list.forEach(name => {
+    r[name] = ''
+  })
+  return r
+}
 
 exports.field_list = ['partNumbers', 'description']
 
@@ -111,12 +121,14 @@ exports.merge = function(lines1, lines2) {
     d = duplicates[ref]
     warnings.push({
       title: 'Duplicate lines detected',
-      message: `You have the exact same reference '${ref}' on lines \
-${d.slice(0, d.length - 2 + 1 || undefined).map(n => n + 1)} and ${d[
-        d.length - 1
-      ] + 1}. \
-These have been merged`
+      message: `You have the exact same reference '${ref}' on lines ${d
+        .slice(0, d.length - 2 + 1 || undefined)
+        .map(n => n + 1)} and ${d[d.length - 1] + 1}. These have been merged`
     })
   }
   return [merged, warnings]
 }
+
+exports.retailer_list = retailer_list
+exports.getRetailers = getRetailers
+exports.getEmptyRetailers = getEmptyRetailers
