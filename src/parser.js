@@ -14,7 +14,9 @@ const retailerAliases = {
   'RS(-| )?Delivers': 'RS',
   'Radio(-| )?Spares': 'RS',
   'RS(-| )?Components': 'RS',
-  Newark: 'Newark'
+  Newark: 'Newark',
+  Rapid: 'Rapid',
+  'rapid.?online': 'Rapid'
 }
 
 const headings = {
