@@ -135,7 +135,9 @@ function toLines(sheet, warnings) {
     }
   }
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
-  lines = lines.map(processLine.bind(null, warnings))
+  lines = lines
+    .map(processLine.bind(null, warnings))
+    .filter(l => l.quantity > 0)
   return {lines, warnings, invalid: []}
 }
 
@@ -170,12 +172,12 @@ function processLine(warnings, line, i) {
       retailerParts.push(v)
     } else if (key === 'quantity') {
       let q = parseInt(v, 10)
-      if (isNaN(q) || q < 1) {
+      if (isNaN(q) || q < 0) {
         warnings.push({
           title: 'Invalid quantity',
-          message: `Row ${i} has an invalid quantity: ${v}. Defaulting to 1. `
+          message: `Row ${i} has an invalid quantity: ${v}. Removing this line.`
         })
-        q = 1
+        q = 0
       }
       newLine.quantity = q
     } else {
