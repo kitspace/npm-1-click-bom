@@ -150,13 +150,9 @@ function toLines(sheet, warnings) {
 }
 
 function processLine(warnings, line, i) {
-  const emptyRetailers = {}
-  lineData.retailer_list.forEach(r => {
-    emptyRetailers[r] = ''
-  })
   const newLine = {
     row: i + 1,
-    retailers: emptyRetailers
+    retailers: lineData.getEmptyRetailers()
   }
   const manufacturers = []
   const parts = []

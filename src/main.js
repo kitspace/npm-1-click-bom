@@ -1,9 +1,23 @@
 'use strict'
-var parser = require('./parser')
-var writer = require('./writer')
-var lineData = require('./line_data')
+const {parse, parseTSV} = require('./parser')
+const {writeTSV} = require('./writer')
+const {
+  getRetailers,
+  getEmptyRetailers,
+  numberOfEmpty,
+  hasSKUs,
+  merge,
+  maxPartNumbers,
+  toRetailers
+} = require('./line_data')
 
-exports.parse = parser.parse
-exports.parseTSV = parser.parseTSV
-exports.writeTSV = writer.writeTSV
-exports.lineData = lineData
+exports.parse = parse
+exports.parseTSV = parseTSV
+exports.writeTSV = writeTSV
+exports.getRetailers = getRetailers
+exports.getEmptyRetailers = getEmptyRetailers
+exports.numberOfEmpty = numberOfEmpty
+exports.hasSKUs = hasSKUs
+exports.merge = merge
+exports.maxPartNumbers = maxPartNumbers
+exports.toRetailers = toRetailers

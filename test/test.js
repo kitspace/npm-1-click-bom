@@ -3,7 +3,6 @@ var oneClickBom = require('../lib/main')
 parseTSV = oneClickBom.parseTSV
 writeTSV = oneClickBom.writeTSV
 var stripQuotes = require('../lib/parser').stripQuotes
-var lineData = require('../lib/main').lineData
 
 describe('parseTSV', function() {
   it('catches negative quantities', function() {
@@ -125,11 +124,11 @@ describe('writeTSV', () =>
   it('writes out multiple part numbers', function() {
     var test_string =
       'References\tQty\tDescription\tManufacturer\tMPN\tManufacturer\tMPN'
-    for (var retailer of lineData.retailer_list) {
+    for (var retailer of oneClickBom.getRetailers()) {
       test_string += `\t${retailer}`
     }
     test_string += '\ntest\t1\tdescr\tmanuf1\tmpn1\tmanuf2\tmpn2'
-    for (var _ of lineData.retailer_list) {
+    for (var _ of oneClickBom.getRetailers()) {
       test_string += '\t'
     }
     test_string += '\n'
@@ -137,18 +136,18 @@ describe('writeTSV', () =>
     expect(writeTSV(result.lines)).to.equal(test_string)
   }))
 
-describe('lineData.numberOfEmpty', function() {
+describe('oneClickBom.numberOfEmpty', function() {
   it('counts retailers as empty fields', function() {
     var result = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n')
-    expect(lineData.numberOfEmpty(result.lines)).to.equal(
-      lineData.retailer_list.length
+    expect(oneClickBom.numberOfEmpty(result.lines)).to.equal(
+      oneClickBom.getRetailers().length
     )
   })
 
   it('counts empty part numbers as empty fields', function() {
     var result = parseTSV('References\tQty\tFarnell\ntest\t1\t898989\n')
-    expect(lineData.numberOfEmpty(result.lines)).to.equal(
-      lineData.retailer_list.length
+    expect(oneClickBom.numberOfEmpty(result.lines)).to.equal(
+      oneClickBom.getRetailers().length
     )
   })
 
@@ -156,64 +155,64 @@ describe('lineData.numberOfEmpty', function() {
     var result = parseTSV(
       'References\tQty\tFarnell\tPart\tPart\ntest\t1\t898989\t\t\n'
     )
-    expect(lineData.numberOfEmpty(result.lines)).to.equal(
-      lineData.retailer_list.length
+    expect(oneClickBom.numberOfEmpty(result.lines)).to.equal(
+      oneClickBom.getRetailers().length
     )
   })
 })
 
-describe('lineData.hasSKUs', function() {
+describe('oneClickBom.hasSKUs', function() {
   it('returns false on empty', function() {
-    expect(lineData.hasSKUs([])).to.equal(false)
+    expect(oneClickBom.hasSKUs([])).to.equal(false)
   })
   it('returns false with no skus', function() {
     const lines = [
       {
-        retailers: lineData.getEmptyRetailers()
+        retailers: oneClickBom.getEmptyRetailers()
       },
       {
-        retailers: lineData.getEmptyRetailers()
+        retailers: oneClickBom.getEmptyRetailers()
       }
     ]
-    expect(lineData.hasSKUs(lines)).to.equal(false)
+    expect(oneClickBom.hasSKUs(lines)).to.equal(false)
   })
   it('returns true when there is an sku', function() {
-    const retailers = lineData.getEmptyRetailers()
+    const retailers = oneClickBom.getEmptyRetailers()
     retailers.Newark = 'x'
     const lines = [
       {
         retailers
       },
       {
-        retailers: lineData.getEmptyRetailers()
+        retailers: oneClickBom.getEmptyRetailers()
       }
     ]
-    expect(lineData.hasSKUs(lines)).to.equal(true)
+    expect(oneClickBom.hasSKUs(lines)).to.equal(true)
   })
 })
 
-describe('lineData.merge', () => {
+describe('oneClickBom.merge', () => {
   it('increases quantity on identical merge', function() {
     var result = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n')
     var lines1 = JSON.parse(JSON.stringify(result.lines))
     result = parseTSV('References\tQty\tPart Number\ntest\t1\tmpn1\n')
     var lines2 = JSON.parse(JSON.stringify(result.lines))
-    var merged = lineData.merge(lines1, lines2)
+    var merged = oneClickBom.merge(lines1, lines2)
     return expect(merged[0][0].quantity).to.equal(2)
   })
 })
 
-describe('lineData.maxPartNumbers', () => {
+describe('oneClickBom.maxPartNumbers', () => {
   it('returns maximum number of MPNs per line in lines', () => {
     var result = parseTSV(
       'References\tQty\tPart Number\tPart Number\ntest\t1\tmpn1\tmpn2\ntest2\ntest2\t1\tmpn1\t\t\n'
     )
-    var max = lineData.maxPartNumbers(result.lines)
+    var max = oneClickBom.maxPartNumbers(result.lines)
     expect(max).to.equal(2)
   })
 })
 
-describe('lineData.toRetailers', () => {
+describe('oneClickBom.toRetailers', () => {
   it('extracts retailers', () => {
     const lines = [
       {
@@ -235,7 +234,7 @@ describe('lineData.toRetailers', () => {
         }
       }
     ]
-    const result = lineData.toRetailers(lines)
+    const result = oneClickBom.toRetailers(lines)
     expect(result.Digikey.length).to.equal(2)
     expect(result.Mouser.length).to.equal(2)
     expect(result.RS.length).to.equal(2)
