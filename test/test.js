@@ -15,6 +15,13 @@ describe('parseTSV', function() {
     expect(result.lines[0].retailers.Farnell).to.equal('898989')
   })
 
+  it("doesn't leave things undefined", function() {
+    var result = parseTSV('References\tQty\tFarnell\ntest\t1\t898989')
+    expect(result.lines[0].description).to.equal('')
+    expect(result.warnings.length).to.equal(0)
+    expect(result.invalid.length).to.equal(0)
+  })
+
   it("doesn't replace dashes for Digikey", function() {
     var result = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
     expect(result.lines[0].retailers.Digikey).to.equal('8-98-989')

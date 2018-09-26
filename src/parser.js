@@ -218,6 +218,9 @@ function processLine(warnings, line, i) {
   if (newLine.fitted == null) {
     newLine.fitted = true
   }
+  if (newLine.description == null) {
+    newLine.description = ''
+  }
   return newLine
 }
 
