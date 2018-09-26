@@ -1,5 +1,6 @@
 'use strict'
 const xlsx = require('xlsx')
+const fileType = require('file-type')
 const lineData = require('./line_data')
 
 const retailerAliases = {
@@ -70,11 +71,27 @@ const headings = {
   dns: 'notFitted'
 }
 
-function parse(text) {
+function parse(input) {
+  if (fileType(input) == null && /\t/.test(input)) {
+    return parseTSV(input)
+  }
+  return read(input)
+}
+
+function parseTSV(str) {
+  // js-xslx gets confused by quote marks in TSV
+  // https://github.com/SheetJS/js-xlsx/issues/825, we don't use non-content
+  // quote marks for TSV so we just escape all the quote marks
+  str = str.replace(/"/g, '""')
+
+  return read(str)
+}
+
+function read(input) {
   const warnings = []
   let x
   try {
-    x = xlsx.read(text, {type: 'buffer'})
+    x = xlsx.read(input, {type: 'buffer'})
   } catch (e) {
     return {
       lines: [],
@@ -269,15 +286,6 @@ function stripQuotes(str) {
     ret = ret.substr(0, last)
   }
   return ret
-}
-
-function parseTSV(str) {
-  // js-xslx gets confused by quote marks in TSV
-  // https://github.com/SheetJS/js-xlsx/issues/825, we don't use non-content
-  // quote marks for TSV so we just escape all the quote marks
-
-  str = str.replace(/"/g, '""')
-  return parse(str)
 }
 
 exports.parseTSV = parseTSV

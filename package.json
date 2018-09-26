@@ -27,6 +27,7 @@
   },
   "main": "lib/main.js",
   "dependencies": {
+    "file-type": "^9.0.0",
     "xlsx": "^0.12.6"
   }
 }
