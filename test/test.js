@@ -113,6 +113,13 @@ describe('parseTSV', function() {
     )
     expect(result.lines.length).to.equal(1)
   })
+
+  it("doesn't get confused about quotes in tsv", function() {
+    var result = parseTSV(
+      'References\tQty\tDescription\tFarnell\ntest\t1\t0.1" header\t898989\n'
+    )
+    expect(result.lines[0].retailers.Farnell).to.equal('898989')
+  })
 })
 
 describe('stripQuotes', function() {

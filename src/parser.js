@@ -268,6 +268,15 @@ function stripQuotes(str) {
   return ret
 }
 
-exports.parseTSV = parse
+function parseTSV(str) {
+  // js-xslx gets confused by quote marks in TSV
+  // https://github.com/SheetJS/js-xlsx/issues/825, we don't use non-content
+  // quote marks for TSV so we just escape all the quote marks
+
+  str = str.replace(/"/g, '""')
+  return parse(str)
+}
+
+exports.parseTSV = parseTSV
 exports.parse = parse
 exports.stripQuotes = stripQuotes
