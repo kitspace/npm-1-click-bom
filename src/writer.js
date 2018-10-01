@@ -13,7 +13,7 @@ exports.writeTSV = function(lines) {
   var maxParts = maxPartNumbers(lines)
 
   if (maxParts >= 1) {
-    for (var _ of __range__(1, maxParts, true)) {
+    for (var i = 0; i < maxParts; i++) {
       r += '\tManufacturer'
       r += '\tMPN'
     }
@@ -30,7 +30,7 @@ exports.writeTSV = function(lines) {
     r += `\t${line.quantity}`
     r += `\t${line.description}`
     if (maxParts >= 1) {
-      for (var i of __range__(0, maxParts - 1, true)) {
+      for (var i = 0; i < maxParts; i++) {
         r += '\t'
         if (line.partNumbers[i] != null) {
           r += line.partNumbers[i].manufacturer
@@ -51,14 +51,4 @@ exports.writeTSV = function(lines) {
     r += '\n'
   }
   return r
-}
-
-function __range__(left, right, inclusive) {
-  var range = []
-  var ascending = left < right
-  var end = !inclusive ? right : ascending ? right + 1 : right - 1
-  for (var i = left; ascending ? i < end : i > end; ascending ? i++ : i--) {
-    range.push(i)
-  }
-  return range
 }
