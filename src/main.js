@@ -1,6 +1,6 @@
 'use strict'
 const {parse, parseTSV} = require('./parser')
-const {writeTSV} = require('./writer')
+const {write, writeTSV} = require('./writer')
 const {
   getRetailers,
   getEmptyRetailers,
@@ -14,6 +14,7 @@ const {
 
 exports.parse = parse
 exports.parseTSV = parseTSV
+exports.write = write
 exports.writeTSV = writeTSV
 exports.getRetailers = getRetailers
 exports.getEmptyRetailers = getEmptyRetailers
