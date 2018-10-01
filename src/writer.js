@@ -7,7 +7,7 @@ var headings = [
   {partNumbers: 'Part Number'}
 ]
 
-exports.writeTSV = function(lines) {
+function writeTSV(lines) {
   var r = 'References\tQty\tDescription'
 
   var maxParts = maxPartNumbers(lines)
@@ -26,7 +26,7 @@ exports.writeTSV = function(lines) {
   r += '\n'
 
   for (var line of lines) {
-    r += `${line.reference}`
+    r += `${line.reference || ''}`
     r += `\t${line.quantity}`
     r += `\t${line.description}`
     if (maxParts >= 1) {
@@ -52,3 +52,5 @@ exports.writeTSV = function(lines) {
   }
   return r
 }
+
+exports.writeTSV = writeTSV
