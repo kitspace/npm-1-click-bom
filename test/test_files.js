@@ -44,6 +44,18 @@ describe('files', () => {
       done()
     })
   })
+  it('parses kicad_pcb', done => {
+    fs.readFile(path.join(__dirname, 'example2.kicad_pcb'), (err, content) => {
+      const {lines} = oneClickBOM.parse(content)
+      expect(lines.length).to.be.above(0)
+      const x = oneClickBOM.writeTSV(lines)
+      fs.readFile(path.join(__dirname, 'example2.tsv'), (err, contentTsv) => {
+        const ref = oneClickBOM.writeTSV(oneClickBOM.parseTSV(contentTsv))
+        expect(x).to.equal(ref)
+        done()
+      })
+    })
+  })
   it("doesn't change content for xlsx", done => {
     fs.readFile(path.join(__dirname, 'example.xlsx'), (err, content) => {
       const {lines} = oneClickBOM.parse(content)
