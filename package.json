@@ -28,6 +28,7 @@
   "main": "lib/main.js",
   "dependencies": {
     "file-type": "^9.0.0",
+    "s-expression": "^3.0.3",
     "xlsx": "^0.12.6"
   }
 }

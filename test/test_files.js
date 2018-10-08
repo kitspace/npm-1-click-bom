@@ -46,11 +46,12 @@ describe('files', () => {
   })
   it('parses kicad_pcb', done => {
     fs.readFile(path.join(__dirname, 'example2.kicad_pcb'), (err, content) => {
-      const {lines} = oneClickBOM.parse(content)
+      const {lines} = oneClickBOM.parse(content, {ext: 'kicad_pcb'})
       expect(lines.length).to.be.above(0)
       const x = oneClickBOM.writeTSV(lines)
       fs.readFile(path.join(__dirname, 'example2.tsv'), (err, contentTsv) => {
-        const ref = oneClickBOM.writeTSV(oneClickBOM.parseTSV(contentTsv))
+        const {lines: refLines} = oneClickBOM.parse(contentTsv)
+        const ref = oneClickBOM.writeTSV(refLines)
         expect(x).to.equal(ref)
         done()
       })

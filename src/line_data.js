@@ -1,6 +1,16 @@
 'use strict'
 const retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell', 'Rapid']
 
+function getEmptyLine() {
+  return {
+    reference: '',
+    quantity: 0,
+    description: '',
+    partNumbers: [],
+    retailers: getEmptyRetailers()
+  }
+}
+
 function getRetailers() {
   return retailer_list.slice()
 }
@@ -127,6 +137,7 @@ function merge(lines1, lines2) {
   return [merged, warnings]
 }
 
+exports.getEmptyLine = getEmptyLine
 exports.retailer_list = retailer_list
 exports.getRetailers = getRetailers
 exports.getEmptyRetailers = getEmptyRetailers

@@ -2,6 +2,7 @@
 const xlsx = require('xlsx')
 const fileType = require('file-type')
 const lineData = require('./line_data')
+const kicadPcbToBom = require('./kicad_pcb')
 
 const retailerAliases = {
   Farnell: 'Farnell',
@@ -71,20 +72,30 @@ const headings = {
   dns: 'notFitted'
 }
 
-function parse(input) {
+function parse(input, options={}) {
+  if (options.ext === 'kicad_pcb') {
+    if (typeof input === 'object') {
+      input = input.toString()
+    }
+    const lines = kicadPcbToBom(input)
+    return {lines, warnings: [], invalid: []}
+  }
   if (fileType(input) == null && /\t/.test(input)) {
     return parseTSV(input)
   }
   return read(input)
 }
 
-function parseTSV(str) {
+function parseTSV(input) {
+  if (typeof input === 'object') {
+    input = input.toString()
+  }
   // js-xslx gets confused by quote marks in TSV
   // https://github.com/SheetJS/js-xlsx/issues/825, we don't use non-content
   // quote marks for TSV so we just escape all the quote marks
-  str = str.replace(/"/g, '""')
+  input = input.replace(/"/g, '""')
 
-  return read(str)
+  return read(input)
 }
 
 function read(input) {
