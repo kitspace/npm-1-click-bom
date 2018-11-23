@@ -72,7 +72,7 @@ const headings = {
   dns: 'notFitted'
 }
 
-function parse(input, options={}) {
+function parse(input, options = {}) {
   if (options.ext === 'kicad_pcb') {
     if (typeof input === 'object') {
       input = input.toString()
@@ -180,10 +180,8 @@ function toLines(sheet, warnings) {
 }
 
 function processLine(warnings, line, i) {
-  const newLine = {
-    row: i + 1,
-    retailers: lineData.getEmptyRetailers()
-  }
+  const newLine = lineData.getEmptyLine()
+  newLine.row = i + 1
   const manufacturers = []
   const parts = []
   const retailers = []

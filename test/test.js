@@ -127,6 +127,13 @@ describe('parseTSV', function() {
     )
     expect(result.lines[0].retailers.Farnell).to.equal('898989')
   })
+
+  it('always has a reference', function() {
+    var result = parseTSV(
+      'References\tQty\tDescription\tDigikey\tMouser\tRS\tNewark\tFarnell\tRapid\n\t1\t\t\t\t\t\t\t\n'
+    )
+    expect(result.lines[0].reference).to.equal('')
+  })
 })
 
 describe('stripQuotes', function() {
