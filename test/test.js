@@ -22,6 +22,11 @@ describe('parseTSV', function() {
     expect(result.invalid.length).to.equal(0)
   })
 
+  it('can handle \\r\\n line endings', function() {
+    var result = parseTSV('References\tQty\tFarnell\r\ntest\t1\t898989\r\n')
+    expect(result.lines[0].retailers.Farnell).to.equal('898989')
+  })
+
   it("doesn't replace dashes for Digikey", function() {
     var result = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
     expect(result.lines[0].retailers.Digikey).to.equal('8-98-989')
