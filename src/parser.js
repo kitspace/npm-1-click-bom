@@ -69,7 +69,12 @@ const headings = {
   'do not fit': 'notFitted',
   'do not stuff': 'notFitted',
   dnf: 'notFitted',
-  dns: 'notFitted'
+  dns: 'notFitted',
+  'values?': 'value',
+  'voltages?': 'voltage',
+  'volt.?': 'voltage',
+  '.*power.*': 'power',
+  'footprints?': 'footprint',
 }
 
 function parse(input, options = {}) {
@@ -159,18 +164,6 @@ function toLines(sheet, warnings) {
       invalid: [{row: 1, reason: 'No references column'}]
     }
   }
-  if (hs.filter(x => x).length < 3) {
-    return {
-      lines: [],
-      invalid: [
-        {
-          row: 1,
-          reason:
-            'You need at least references, quantity and a part number or retailer column'
-        }
-      ]
-    }
-  }
   let lines = xlsx.utils.sheet_to_json(sheet, {header: hs, range: h + 1})
   lines = lines
     .map(processLine.bind(null, warnings))
@@ -244,9 +237,17 @@ function processLine(warnings, line, i) {
   if (newLine.fitted == null) {
     newLine.fitted = true
   }
-  if (newLine.description == null) {
-    newLine.description = ''
+  if (newLine.description == '') {
+    newLine.description += newLine.value ? newLine.value + ' ' : ''
+    newLine.description += newLine.voltage ? newLine.voltage + ' ' : ''
+    newLine.description += newLine.power ? newLine.power + ' ' : ''
+    newLine.description += newLine.footprint ? newLine.footprint + ' ' : ''
+    newLine.description = newLine.description.trim()
   }
+  delete newLine.value
+  delete newLine.voltage
+  delete newLine.power
+  delete newLine.footprint
   return newLine
 }
 

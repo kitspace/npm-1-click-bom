@@ -134,6 +134,15 @@ describe('parseTSV', function() {
     )
     expect(result.lines[0].reference).to.equal('')
   })
+
+  it('pulls more things into description', () => {
+    var result = parseTSV(
+      'Value\tVoltage\tPower\tFootprint\tRef\tqty\nvalue\tvoltage\tpower\tfootprint\ttest\t1'
+    )
+    expect(result.lines[0].description).to.equal(
+      'value voltage power footprint'
+    )
+  })
 })
 
 describe('stripQuotes', function() {
