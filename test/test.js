@@ -136,12 +136,19 @@ describe('parseTSV', function() {
   })
 
   it('pulls more things into description', () => {
-    var result = parseTSV(
+    const result = parseTSV(
       'Value\tVoltage\tPower\tFootprint\tRef\tqty\nvalue\tvoltage\tpower\tfootprint\ttest\t1'
     )
     expect(result.lines[0].description).to.equal(
       'value voltage power footprint'
     )
+  })
+
+  it("doesn't get confused by commas in the line", () => {
+    const result = parseTSV(
+      'References\tQty\tDescription\tMPN\n,,,,,,\t1\t\ttest\n'
+    )
+    expect(result.lines[0].reference).to.equal(',,,,,,')
   })
 })
 

@@ -74,7 +74,7 @@ const headings = {
   'voltages?': 'voltage',
   'volt.?': 'voltage',
   '.*power.*': 'power',
-  'footprints?': 'footprint',
+  'footprints?': 'footprint'
 }
 
 function parse(input, options = {}) {
@@ -99,6 +99,18 @@ function parseTSV(input) {
   // https://github.com/SheetJS/js-xlsx/issues/825, we don't use non-content
   // quote marks for TSV so we just escape all the quote marks
   input = input.replace(/"/g, '""')
+
+  // additionally js-xlsx can interpret a lot of non-quoted commas as CSV input
+  // so we quote everything
+  input = input
+    .split('\n')
+    .map(line =>
+      line
+        .split('\t')
+        .map(cell => '"' + cell + '"')
+        .join('\t')
+    )
+    .join('\n')
 
   return read(input)
 }
