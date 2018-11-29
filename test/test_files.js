@@ -44,6 +44,15 @@ describe('files', () => {
       done()
     })
   })
+  it('parses xls', done => {
+    fs.readFile(path.join(__dirname, 'example.xls'), (err, content) => {
+      const {lines} = oneClickBOM.parse(content)
+      expect(lines.length).to.be.above(0)
+      const x = oneClickBOM.writeTSV(lines)
+      expect(x).to.equal(ref)
+      done()
+    })
+  })
   it('parses kicad_pcb', done => {
     fs.readFile(path.join(__dirname, 'example2.kicad_pcb'), (err, content) => {
       const {lines} = oneClickBOM.parse(content, {ext: 'kicad_pcb'})

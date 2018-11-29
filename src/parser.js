@@ -242,6 +242,9 @@ function processLine(warnings, line, i) {
   // handle retailer/part columns
   retailerParts.forEach((part, i) => {
     const r = retailers[i]
+    if (r !== 'Digikey') {
+      part = part.replace(/-/g, '')
+    }
     if (r) {
       newLine.retailers[r] = part
     }
