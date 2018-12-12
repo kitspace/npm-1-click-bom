@@ -168,6 +168,14 @@ describe('parseTSV', function() {
     )
     expect(result.lines[0].reference).to.equal(',,,,,,')
   })
+  it("doesn't get confused by commas in the line 2", () => {
+    const result = parseTSV(
+      'ref\tqty\tdigikey\nR137, R138, R205, R206, R207, R220, R221,R122,R55\t1\t296-1411-5-ND'
+    )
+    expect(result.lines[0].reference).to.equal(
+      'R137, R138, R205, R206, R207, R220, R221,R122,R55'
+    )
+  })
 })
 
 describe('stripQuotes', function() {
