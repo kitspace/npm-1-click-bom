@@ -1,6 +1,6 @@
 'use strict'
 const xlsx = require('xlsx')
-const fileType = require('file-type')
+const fileType = require('./file_type')
 const lineData = require('./line_data')
 const kicadPcbToBom = require('./kicad_pcb')
 
