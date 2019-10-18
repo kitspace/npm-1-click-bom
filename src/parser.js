@@ -17,6 +17,7 @@ const retailerAliases = {
   'Radio(-| )?Spares': 'RS',
   'RS(-| )?Components': 'RS',
   Newark: 'Newark',
+  LCSC: 'LCSC',
 }
 
 const headings = {

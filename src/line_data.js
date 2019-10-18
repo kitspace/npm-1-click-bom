@@ -1,5 +1,5 @@
 'use strict'
-const retailer_list = ['Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
+const retailer_list = ['LCSC', 'Digikey', 'Mouser', 'RS', 'Newark', 'Farnell']
 
 function getEmptyLine() {
   return {
