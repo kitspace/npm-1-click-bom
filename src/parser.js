@@ -18,6 +18,7 @@ const retailerAliases = {
   'RS(-| )?Components': 'RS',
   Newark: 'Newark',
   LCSC: 'LCSC',
+  'Westfield.*': 'Westfield'
 }
 
 const headings = {
