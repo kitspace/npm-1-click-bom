@@ -9,6 +9,7 @@ const retailerAliases = {
   FEC: 'Farnell',
   Premier: 'Farnell',
   element14: 'Farnell',
+  'sn-dk': 'Digikey',
   'Digi(-| )?key': 'Digikey',
   Mouser: 'Mouser',
   RS: 'RS',
@@ -17,7 +18,7 @@ const retailerAliases = {
   'Radio(-| )?Spares': 'RS',
   'RS(-| )?Components': 'RS',
   Newark: 'Newark',
-  LCSC: 'LCSC',
+  LCSC: 'LCSC'
 }
 
 const headings = {
@@ -36,6 +37,7 @@ const headings = {
   quantities: 'quantity',
   'quant.?': 'quantity',
   'co?u?nt': 'quantity',
+  pn: 'partNumber',
   'part(-| )?numbers?': 'partNumber',
   'm/?f parts?': 'partNumber',
   'manuf\\.? parts?': 'partNumber',
@@ -49,9 +51,6 @@ const headings = {
   'ma?n?fr part.*': 'partNumber',
   mfpn: 'partNumber',
   'mfg.?part.*': 'partNumber',
-  'manufacturers?': 'manufacturer',
-  'm/?f': 'manufacturer',
-  'manuf\\.?': 'manufacturer',
   'retail\\.? part no\\.?': 'retailerPart',
   'retailer part number': 'retailerPart',
   'suppl\\.? part no\\.?': 'retailerPart',
@@ -74,7 +73,11 @@ const headings = {
   'voltages?': 'voltage',
   'volt.?': 'voltage',
   '.*power.*': 'power',
-  'footprints?': 'footprint'
+  'footprints?': 'footprint',
+  'manufacturers?': 'manufacturer',
+  'm/?f': 'manufacturer',
+  'manuf\\.?': 'manufacturer',
+  'mfg.': 'manufacturer'
 }
 
 function parse(input, options = {}) {
