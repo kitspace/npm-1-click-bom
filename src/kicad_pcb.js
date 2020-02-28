@@ -1,4 +1,5 @@
 const parseSExpression = require('s-expression')
+const electroGrammar = require('electro-grammar')
 
 const {getEmptyLine} = require('./line_data')
 
@@ -12,13 +13,9 @@ function pcb2lines(kicad_pcb) {
   const s = parseSExpression(kicad_pcb)
   const lines = filterModules(s)
   return lines.map(l => {
-    let {reference, description, value, footprint} = l.reduce((prev, attr) => {
+    let {reference, value, footprint} = l.reduce((prev, attr) => {
       const kw = attr[0]
-      if (kw === 'descr' && attr[1]) {
-        prev.description = attr[1]
-      } else if (kw === 'tags' && prev.description == null && attr[1]) {
-        prev.description = attr[1]
-      } else if (kw === 'fp_text') {
+      if (kw === 'fp_text') {
         if (attr[1] === 'value') {
           prev.value = attr[2]
         } else if (attr[1] === 'reference') {
@@ -29,12 +26,22 @@ function pcb2lines(kicad_pcb) {
       }
       return prev
     }, {})
-    if (description == null) {
-      const name = footprint.split(':')[1]
-      description = name
+    const footprint_name = footprint.split(':')[1].replace(/_/g, ' ')
+    value = value.replace(/_/g, ' ')
+    const description = value + ' ' + footprint_name
+    const component = electroGrammar.parse(description, {returnIgnored: true})
+    if (component.size) {
+      const egValue = component.resistance || component.capacitance
+      // ignore if no value, or when the value actually looks like footprint,
+      // or if we got no info from the footprint name
+      if (
+        egValue &&
+        !RegExp(egValue).test(footprint_name) &&
+        component.ignored !== footprint_name
+      ) {
+        return {reference, description: value + ' ' + component.size}
+      }
     }
-    description += ' ' + value
-    description = description.replace(/_|\n/g, ' ').trim()
     return {reference, description}
   })
 }

@@ -27,6 +27,7 @@
   },
   "main": "lib/main.js",
   "dependencies": {
+    "electro-grammar": "https://github.com/kitspace/electro-grammar#dev2",
     "s-expression": "^3.0.3",
     "xlsx": "^0.12.6"
   }
