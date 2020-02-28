@@ -12,38 +12,46 @@ module.exports = function kicadPcbToBom(kicad_pcb) {
 function pcb2lines(kicad_pcb) {
   const s = parseSExpression(kicad_pcb)
   const lines = filterModules(s)
-  return lines.map(l => {
-    let {reference, value, footprint} = l.reduce((prev, attr) => {
-      const kw = attr[0]
-      if (kw === 'fp_text') {
-        if (attr[1] === 'value') {
-          prev.value = attr[2]
-        } else if (attr[1] === 'reference') {
-          prev.reference = attr[2]
+  return lines
+    .map(l => {
+      let {reference, value, footprint, virtual} = l.reduce((prev, attr) => {
+        const kw = attr[0]
+        if (kw === 'attr' && attr[1] === 'virtual') {
+          prev.virtual = true
         }
-      } else if (attr[0] === 'footprint') {
-        prev.footprint = attr[1]
+        if (kw === 'fp_text') {
+          if (attr[1] === 'value') {
+            prev.value = attr[2]
+          } else if (attr[1] === 'reference') {
+            prev.reference = attr[2]
+          }
+        } else if (attr[0] === 'footprint') {
+          prev.footprint = attr[1]
+        }
+        return prev
+      }, {})
+      if (virtual) {
+        return null
       }
-      return prev
-    }, {})
-    const footprint_name = footprint.split(':')[1].replace(/_/g, ' ')
-    value = value.replace(/_/g, ' ')
-    const description = value + ' ' + footprint_name
-    const component = electroGrammar.parse(description, {returnIgnored: true})
-    if (component.size) {
-      const egValue = component.resistance || component.capacitance
-      // ignore if no value, or when the value actually looks like footprint,
-      // or if we got no info from the footprint name
-      if (
-        egValue &&
-        !RegExp(egValue).test(footprint_name) &&
-        component.ignored !== footprint_name
-      ) {
-        return {reference, description: value + ' ' + component.size}
+      const footprint_name = footprint.split(':')[1].replace(/_/g, ' ')
+      value = value.replace(/_/g, ' ')
+      const description = value + ' ' + footprint_name
+      const component = electroGrammar.parse(description, {returnIgnored: true})
+      if (component.size) {
+        const egValue = component.resistance || component.capacitance
+        // ignore if no value, or when the value actually looks like a footprint,
+        // or if we got no info from the footprint name
+        if (
+          egValue &&
+          !RegExp(egValue).test(footprint_name) &&
+          component.ignored !== footprint_name
+        ) {
+          return {reference, description: value + ' ' + component.size}
+        }
       }
-    }
-    return {reference, description}
-  })
+      return {reference, description}
+    })
+    .filter(x => x)
 }
 
 function mergeLines(unmerged) {
@@ -75,7 +83,8 @@ function filterModules(s) {
           y[0] === 'footprint' ||
           y[0] === 'descr' ||
           y[0] === 'tags' ||
-          y[0] === 'fp_text'
+          y[0] === 'fp_text' ||
+          y[0] === 'attr'
       )
     )
 }
