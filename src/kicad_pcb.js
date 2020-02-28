@@ -47,7 +47,10 @@ function pcb2lines(kicad_pcb) {
           !RegExp(egValue).test(footprint_name) &&
           component.ignored !== footprint_name
         ) {
-          return {reference, description: value + ' ' + component.size}
+          return {
+            reference,
+            description: component.type + ' ' + value + ' ' + component.size
+          }
         }
       }
       return {reference, description}
