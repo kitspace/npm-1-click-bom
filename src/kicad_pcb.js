@@ -38,7 +38,8 @@ function pcb2lines(kicad_pcb) {
       const description = value + ' ' + footprint_name
       const component = electroGrammar.parse(description, {returnIgnored: true})
       if (component.size) {
-        const egValue = component.resistance || component.capacitance
+        const egValue =
+          component.resistance || component.capacitance || component.color
         // ignore if no value, or when the value actually looks like a footprint,
         // or if we got no info from the footprint name
         if (
