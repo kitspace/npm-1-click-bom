@@ -18,6 +18,8 @@ const retailerAliases = {
   'Radio(-| )?Spares': 'RS',
   'RS(-| )?Components': 'RS',
   Newark: 'Newark',
+  'JLC': 'JLC Assembly',
+  'JLC Assembly': 'JLC Assembly',
   LCSC: 'LCSC'
 }
 
