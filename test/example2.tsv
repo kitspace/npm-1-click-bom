@@ -1,6 +1,6 @@
 ref	qty	description
-J3	1	surface-mounted straight pin header, 1x02, 1.27mm pitch, single row, style 2 (pin 1 right) Conn 01x02 Male
-J1	1	CUI-PJ-002AH-SMT dc-barrel-jack Barrel Jack MountingPin
-F1	1	Fuse SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC 7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator Polyfuse
-D3, D2, D1	3	SOD-123 D
-J2	1	base outline Conn 01x01 Female
+J3	1	Conn 01x02 Male PinHeader 1x02 P1.27mm Vertical SMD Pin1Right
+J1	1	Barrel Jack MountingPin CUI-PJ-002AH-SMT dc-barrel-jack
+F1	1	Polyfuse Fuse 1206 3216Metric
+D3, D2, D1	3	D D SOD-123
+J2	1	Conn 01x01 Female base outline
