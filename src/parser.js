@@ -51,6 +51,7 @@ const headings = {
   'prts?': 'partNumber',
   'manuf#': 'partNumber',
   'ma?n?fr part.*': 'partNumber',
+  'manu\\.? p/?n': 'partNumber',
   mfpn: 'partNumber',
   'mfg.?part.*': 'partNumber',
   'retail\\.? part no\\.?': 'retailerPart',
