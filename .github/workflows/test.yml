@@ -1,0 +1,16 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn install --frozen-lockfile
+
+      # make sure the build was run
+      - run: yarn build
+      - run: git diff --quiet
+
+      - run: yarn test
