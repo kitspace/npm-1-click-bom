@@ -61,6 +61,7 @@ const headings = {
   'supplier part': 'retailerPart',
   'part no\\.?': 'retailerPart',
   'part number\\.?': 'retailerPart',
+  'order code': 'retailerPart',
   'retailers?': 'retailer',
   'retail\\.?': 'retailer',
   'suppliers?': 'retailer',
