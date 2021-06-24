@@ -33,9 +33,12 @@ function pcb2lines(kicad_pcb) {
       if (virtual) {
         return null
       }
-      const footprint_name = footprint.split(':')[1].replace(/_/g, ' ')
+      if (/:/.test(footprint)) {
+        footprint = footprint.split(':')[1]
+      }
+      footprint = footprint.replace(/_/g, ' ')
       value = value.replace(/_/g, ' ')
-      const description = value + ' ' + footprint_name
+      const description = value + ' ' + footprint
       const component = electroGrammar.parse(description, {returnIgnored: true})
       if (component.size) {
         const egValue =
@@ -44,8 +47,8 @@ function pcb2lines(kicad_pcb) {
         // or if we got no info from the footprint name
         if (
           egValue &&
-          !RegExp(egValue).test(footprint_name) &&
-          component.ignored !== footprint_name
+          !RegExp(egValue).test(footprint) &&
+          component.ignored !== footprint
         ) {
           return {
             reference,
