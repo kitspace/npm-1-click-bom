@@ -18,7 +18,7 @@ const retailerAliases = {
   'Radio(-| )?Spares': 'RS',
   'RS(-| )?Components': 'RS',
   Newark: 'Newark',
-  'JLC': 'JLC Assembly',
+  JLC: 'JLC Assembly',
   'JLC Assembly': 'JLC Assembly',
   LCSC: 'LCSC'
 }
@@ -174,10 +174,10 @@ function toLines(sheet, warnings) {
       return x
     })
   if (hs.indexOf('quantity') < 0) {
-    return {
-      lines: [],
-      invalid: [{row: 1, reason: 'No quantity column'}]
-    }
+    warnings.push({
+      title: 'No quantity column',
+      message: `Infering quantities from comma seperated references`
+    })
   }
   if (hs.indexOf('reference') < 0) {
     return {
@@ -200,6 +200,7 @@ function processLine(warnings, line, i) {
   const parts = []
   const retailers = []
   const retailerParts = []
+  const doesNotHaveQty = !Object.keys(line).includes('quantity')
   for (const key in line) {
     const v = stripQuotes(line[key].trim())
     if (lineData.retailer_list.indexOf(key) >= 0) {
@@ -241,6 +242,11 @@ function processLine(warnings, line, i) {
         /not/i.test(v) ||
         /dn(f|s)/i.test(v)
       )
+    } else if (key === 'reference') {
+      newLine.reference = v
+      if (doesNotHaveQty) {
+        newLine.quantity = v.split(',').filter(x => x).length
+      }
     } else {
       newLine[key] = v
     }
