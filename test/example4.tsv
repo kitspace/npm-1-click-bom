@@ -1,0 +1,29 @@
+References	Qty	Description	Manufacturer	MPN	Digikey	Mouser	RS	Newark	Farnell	LCSC	JLC Assembly
+C4, C3, C2,	3	C_Small: Unpolarized capacitor, small symbol	Murata	GCM21BR72A104KA37L					2470440		
+C5, C6, C10, C11,	4	C_Small: Unpolarized capacitor, small symbol	Taiyo Yuden	LMK212ABJ106KGHT					3217584		
+C7, C9, C1,	3	C_Small: Unpolarized capacitor, small symbol	Kemet	C0805C105K3RACTU					1637035		
+D1,	1	D_Schottky: Schottky diode	Nexperia	PMEG3020EH,115					1510687		
+D2,	1	LED: Light emitting diode	ROHM	SML-211DTT86					2507535		
+D3,	1	LED: Light emitting diode	KINGBRIGHT	KP-2012SURCK					1318245		
+D4, D5,	2	LED: Light emitting diode	Everlight	17-215UYC/S530-A3/TR8						C72036	
+J1,	1	Conn_01x02_Female: Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)	Keystone	1042P					2674338		
+J2,	1	USB_B_Micro: USB Micro Type B connector	XKB Connectivity	U254-051T-4BH23-S2B						C319164	
+J3,	1	Conn_Coaxial: coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, ...)	Multicomp	MP-19-70-4-TGG					1342653		
+J4,	1	10PCS SMD SMT 2*5 PIN double row male PIN HEADER 1.27MM PITCH Strip Connector	AliExpress Stlxy	2x5PIN 1.27mm connector							
+R3, R12, R2,	3	R_Small: Resistor, small symbol	Vishay	CRCW080510K0FKEAC		71CRCW080510K0FKEAC					
+R5, R6, R8, R7, R1,	5	R_Small: Resistor, small symbol	Multicomp	MCWR08X1001FTL					2447587		
+R9, R10, R11,	3	R_Small: Resistor, small symbol	Ralec	RTT051003BTP						C312260	
+SW1,	1	SW_SPDT: Switch, single pole double throw	Nidec	CUS-12TB					2854773		
+SW2,	1	SW_Push: Push button switch, generic, two pins	RTLECS	RTLECS Tactile side-actuated switch							
+U1,	1	AP2112K-3.3: 600mA low dropout linear regulator, with enable pin, 3.8V-6V input voltage range, 3.3V fixed positive output, SOT-23-5	Diodes	AP2112K-3.3TRG1					3257429		
+U2,	1	ATSAMD21G18A-AUT: SAM D21 Microchip SMART ARM-based Flash MCU, 48Mhz, 256K Flash, 32K SRAM, TQFP-48	Atmel	ATSAMD21G18A-AU					2409248		
+U3,	1	MCP73831-2-OT: Single cell, Li-Ion/Li-Po charge management controller, 4.20V, Tri-State Status Output, in SOT23-5 package	Microchip	MCP73831T-2ACI/OT					1332158		
+U4,	1	PA1010D:	CDTop	PA1010D							
+U5,	1	RFM95W-915S2: Low power long range transceiver module, SPI and parallel interface, 915 MHz, spreading factor 6 to12, bandwith 7.8 to 500kHz, -111 to -148 dBm, SMD-16, DIP-16	HopeRF	RFM95W-915S2					2759295		
+U6,	1	CONN, HEADER, R/A, 8POS, 1ROW, 2.54MM	AMPHENOL ICC	68016-208HLF					2892394		
+U7,	1	Waveshare_1in54_epaper:	Waveshare	614961950511							
+AE1,	1	Antenna, Compressed Whip, Stub Straight, 868 - 915MHz	LPRS	ANT-SS900					2096218		
+H1, H2, H3, H4	4	Machine Screw, M3, 8 mm, Stainless Steel A4, Pan Head Phillips	ETTINGER	01.17.339					2494517		
+H5, H6, H7, H8	4	Nut, Hex, M3, A2 Stainless Steel, Pack of 100	TR FASTENINGS	M3- HFA2-S100-					1420788		
+H9, H10, H11, H12	4	Standoff, Nickel Plated, Brass, M3, Hex Female, 5 mm, 5 mm	ETTINGER	5/3/53					1466841		
+BT1	1	18650 battery 3.7v 2200mah rechargeable lithium battery	Doublepow	18650 3.7V 2200mAh							

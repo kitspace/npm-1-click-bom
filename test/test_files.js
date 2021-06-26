@@ -79,6 +79,19 @@ describe('files', () => {
       })
     })
   })
+  it('parses csv with proper mouser URL', done => {
+    fs.readFile(path.join(__dirname, 'example4.csv'), (err, content) => {
+      const {lines} = oneClickBOM.parse(content)
+      expect(lines.length).to.be.above(0)
+      const x = oneClickBOM.writeTSV(lines)
+      fs.readFile(path.join(__dirname, 'example4.tsv'), (err, contentTsv) => {
+        const {lines: refLines} = oneClickBOM.parse(contentTsv)
+        const ref = oneClickBOM.writeTSV(refLines)
+        expect(x).to.equal(ref)
+        done()
+      })
+    })
+  })
   it("doesn't change content for xlsx", done => {
     fs.readFile(path.join(__dirname, 'example.xlsx'), (err, content) => {
       const {lines} = oneClickBOM.parse(content)
