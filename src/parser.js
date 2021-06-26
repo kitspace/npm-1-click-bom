@@ -95,7 +95,10 @@ function parse(input, options = {}) {
     return {lines, warnings: [], invalid: []}
   }
   if (fileType(input) == null && /\t/.test(input)) {
-    return parseTSV(input)
+    const result = parseTSV(input)
+    if (result.lines.length === 0) {
+      return read(input)
+    }
   }
   return read(input)
 }
