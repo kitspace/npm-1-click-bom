@@ -23,6 +23,39 @@ const retailerAliases = {
   LCSC: 'LCSC'
 }
 
+const urlToSkuMap = {
+  'mouser\\..*/ProductDetail/(.*)\\??': 'Mouser',
+  'farnell\\..*/.*/dp/(\\d+)': 'Farnell',
+  'element14.com/.*/dp/(\\d+)': 'Farnell',
+  'lcsc.com/.*_(C\\d+).html': 'LCSC'
+}
+
+// a case insensitive reverse-regex lookup that also return
+// the first group match
+function lookupWithGroup(name, obj) {
+  for (const key in obj) {
+    const re = RegExp(key, 'i')
+    const m = name.match(re)
+    if (m) {
+      return [obj[key], m[1]]
+    }
+  }
+  // else
+  return [null, null]
+}
+
+//a case insensitive match
+function lookup(name, obj) {
+  for (const key in obj) {
+    const re = RegExp(key, 'i')
+    if (name.match(re)) {
+      return obj[key]
+    }
+  }
+  //else
+  return null
+}
+
 const headings = {
   'refs?': 'reference',
   'references?': 'reference',
@@ -48,6 +81,7 @@ const headings = {
   'manuf\\.? part numbers?': 'partNumber',
   'manufacturer parts?': 'partNumber',
   'manufacturer part numbers?': 'partNumber',
+  'mfg.part.no': 'partNumber',
   'prts?': 'partNumber',
   'manuf#': 'partNumber',
   'ma?n?fr part.*': 'partNumber',
@@ -83,7 +117,9 @@ const headings = {
   'manufacturers?': 'manufacturer',
   'm/?f': 'manufacturer',
   'manuf\\.?': 'manufacturer',
-  'mfg.': 'manufacturer'
+  'mfg.': 'manufacturer',
+  'urls?': 'url',
+  'links?': 'url'
 }
 
 function parse(input, options = {}) {
@@ -226,6 +262,12 @@ function processLine(warnings, line, i) {
       retailers.push(lookup(v, retailerAliases))
     } else if (key === 'retailerPart') {
       retailerParts.push(v)
+    } else if (key === 'url') {
+      const [retailer, part] = lookupWithGroup(v, urlToSkuMap)
+      if (retailer != null && part !== null) {
+        retailers.push(retailer)
+        retailerParts.push(part)
+      }
     } else if (key === 'quantity') {
       let q = parseInt(v, 10)
       if (isNaN(q) || q <= 0) {
@@ -307,18 +349,6 @@ function findHeader(aoa) {
 
 function rowLength(row) {
   return row.filter(x => x).length
-}
-
-//a case insensitive match
-function lookup(name, obj) {
-  for (const key in obj) {
-    const re = RegExp(key, 'i')
-    if (name.match(re)) {
-      return obj[key]
-    }
-  }
-  //else
-  return null
 }
 
 function sheet_to_aoa(sheet) {
