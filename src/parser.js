@@ -24,7 +24,7 @@ const retailerAliases = {
 }
 
 const urlToSkuMap = {
-  'mouser\\..*/ProductDetail/(.*)\\??': 'Mouser',
+  'mouser\\..*/ProductDetail/(\\d+-.*)\\??': 'Mouser',
   'farnell\\..*/.*/dp/(\\d+)': 'Farnell',
   'element14.com/.*/dp/(\\d+)': 'Farnell',
   'lcsc.com/.*_(C\\d+).html': 'LCSC'
