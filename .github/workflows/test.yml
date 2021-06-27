@@ -8,9 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: yarn install --frozen-lockfile
-
-      # make sure the build was run
-      - run: yarn build
-      - run: git diff --quiet
-
       - run: yarn test

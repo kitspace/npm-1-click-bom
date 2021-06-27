@@ -1,8 +1,8 @@
 var expect = require('chai').expect
-var oneClickBom = require('../lib/main')
+var oneClickBom = require('../src/main')
 parseTSV = oneClickBom.parseTSV
 writeTSV = oneClickBom.writeTSV
-var stripQuotes = require('../lib/parser').stripQuotes
+var stripQuotes = require('../src/parser').stripQuotes
 
 describe('parseTSV', function() {
   it('catches negative quantities', function() {
