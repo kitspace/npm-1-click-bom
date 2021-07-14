@@ -332,11 +332,11 @@ function processLine(warnings, line, i) {
   return newLine
 }
 
-//finds the first row with the most columns
+// finds the first row with the most columns
 function findHeader(aoa) {
   const {i} = aoa.reduce(
     (prev, row, i) => {
-      const len = rowLength(row)
+      const len = row.length
       if (prev.len < len) {
         return {i, len}
       }
@@ -345,10 +345,6 @@ function findHeader(aoa) {
     {i: -1, len: 0}
   )
   return i
-}
-
-function rowLength(row) {
-  return row.filter(x => x).length
 }
 
 function sheet_to_aoa(sheet) {
