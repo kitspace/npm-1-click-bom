@@ -72,6 +72,7 @@ const headings = {
   quantities: 'quantity',
   'quant.?': 'quantity',
   'co?u?nt': 'quantity',
+  'pcs/pcb': 'quantity',
   pn: 'partNumber',
   'part(-| )?numbers?': 'partNumber',
   'm/?f parts?': 'partNumber',
