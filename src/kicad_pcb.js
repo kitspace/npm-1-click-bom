@@ -82,7 +82,7 @@ function mergeLines(unmerged) {
 
 function filterModules(s) {
   return s
-    .filter(x => x[0] === 'module')
+    .filter(x => x[0] === 'module' || x[0] === 'footprint')
     .map(x => x.concat([['footprint', x[1]]]))
     .map(x =>
       x.filter(
