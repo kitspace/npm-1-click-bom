@@ -10,16 +10,6 @@ describe('parseTSV', function() {
     expect(result.warnings.length).to.equal(1)
   })
 
-  it('replaces dashes', function() {
-    var result = parseTSV('References\tQty\tFarnell\ntest\t1\t8-98-989')
-    expect(result.lines[0].retailers.Farnell).to.equal('898989')
-  })
-
-  it('replaces dashes 2', function() {
-    var result = oneClickBom.parse('References\tQty\tRS\ntest\t1\t8-98-989')
-    expect(result.lines[0].retailers.RS).to.equal('898989')
-  })
-
   it("doesn't leave things undefined", function() {
     var result = parseTSV('References\tQty\tFarnell\ntest\t1\t898989')
     expect(result.lines[0].description).to.equal('')
@@ -32,7 +22,7 @@ describe('parseTSV', function() {
     expect(result.lines[0].retailers.Farnell).to.equal('898989')
   })
 
-  it("doesn't replace dashes for Digikey", function() {
+  it("doesn't replace dashes", function() {
     var result = parseTSV('References\tQty\tDigikey\ntest\t1\t8-98-989')
     expect(result.lines[0].retailers.Digikey).to.equal('8-98-989')
   })
@@ -98,14 +88,6 @@ describe('parseTSV', function() {
     )
     expect(result.lines[0].retailers.Farnell).to.equal('part1')
     expect(result.lines[1].retailers.Mouser).to.equal('part2')
-  })
-
-  it('replaces dashes in retailer column', () => {
-    const result = parseTSV(
-      'References\tQty\tRetailer\tPart No.\ntest1\t1\tFEC\txxx-yyy\ntest2\t2\tMouser\tx-y-x-y\n'
-    )
-    expect(result.lines[0].retailers.Farnell).to.equal('xxxyyy')
-    expect(result.lines[1].retailers.Mouser).to.equal('xyxy')
   })
 
   it('always returns an invalid array', () => {
