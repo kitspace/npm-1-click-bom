@@ -248,11 +248,7 @@ function processLine(warnings, line, i) {
   for (const key in line) {
     const v = stripQuotes(line[key].trim())
     if (lineData.retailer_list.indexOf(key) >= 0) {
-      if (key === 'Digikey') {
-        newLine.retailers[key] = v
-      } else {
-        newLine.retailers[key] = v.replace(/-/g, '')
-      }
+      newLine.retailers[key] = v
     } else if (/^manufacturer_/.test(key)) {
       manufacturers.push(v)
     } else if (/^partNumber_/.test(key)) {
