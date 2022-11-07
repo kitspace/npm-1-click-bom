@@ -4,7 +4,7 @@
   "homepage": "http://1clickBOM.com",
   "author": "Kaspar Emanuel",
   "license": "MIT",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "scripts": {
     "test": "istanbul cover -x test/ --include-all-sources _mocha",
     "format": "prettier --write src/*.js test/*.js"
