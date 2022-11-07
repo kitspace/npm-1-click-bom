@@ -327,11 +327,11 @@ function processLine(warnings, line, i) {
   return newLine
 }
 
-// finds the first row with the most columns
+// finds the first row with the most columns and least empty cells
 function findHeader(aoa) {
   const {i} = aoa.reduce(
     (prev, row, i) => {
-      const len = row.length
+      const len = row.filter(cell => cell != null).length
       if (prev.len < len) {
         return {i, len}
       }
