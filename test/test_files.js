@@ -131,4 +131,17 @@ describe('files', () => {
       done()
     })
   })
+  it("ignores empty cells when finding header", done => {
+    fs.readFile(path.join(__dirname, 'example_empty_cells.xlsx'), (err, content) => {
+      const {lines} = oneClickBOM.parse(content)
+      expect(lines.length).to.be.above(0)
+      const buf = oneClickBOM.write(lines, {type: 'buffer', bookType: 'csv'})
+      const r = oneClickBOM.parse(buf)
+      const lines2 = r.lines
+      const tsv1 = oneClickBOM.writeTSV(lines)
+      const tsv2 = oneClickBOM.writeTSV(lines2)
+      expect(tsv1).to.equal(tsv2)
+      done()
+    })
+  })
 })
